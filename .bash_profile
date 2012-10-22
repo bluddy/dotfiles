@@ -35,7 +35,7 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 # Add dbtoaster to path
-export PATH=~/source/dbtoaster/dbtoaster/compiler/alpha4/bin:$PATH
+export PATH=~/source/alpha5/bin:$PATH
 
 # Add ocaml stuff to the path, and other ocaml constants
 source /Users/yotambarnoy/ocamlbrew/ocaml-4.00.0/etc/ocamlbrew.bashrc

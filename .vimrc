@@ -94,7 +94,10 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-nnoremap <leader><space> :nohlsearch<CR>		" clear search with ,space
+nnoremap <C-l> :nohlsearch<CR><C-l>
+nnoremap <silent> <leader>j :LustyJuggler<CR>
+nnoremap <silent> <F4> :NERDTree<CR>
+nnoremap <silent> <F5> :GundoToggle<CR>
 
 " Better leader
 let mapleader = ","
@@ -112,14 +115,21 @@ set grepprg=grep\ -nH\ $*
 " files
 let g:alternateExtensions_ML="mli"
 let g:LustyJugglerSuppressRubyWarning=1  " Suppress Lusty Juggler's ruby messages
+let g:LustyJugglerDefaultMappings=0 " Don't use LJ's defaults
+
 
 if has("autocmd")
 	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
 	autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
 	" Don't flood open buffers with fugitive files
 	autocmd BufReadPost fugitive://* set bufhidden=delete
+	" Remove search highlighting for insert mode
+	autocmd InsertEnter * :setlocal nohlsearch
+	autocmd InsertLeave * :setlocal hlsearch
 endif
 
+" ------------- VAM ---------------------
+"
 fun! EnsureVamIsOnDisk(vam_install_path)
   " windows users may want to use http://mawercer.de/~marc/vam/index.php
   " to fetch VAM, VAM-known-repositories and the listed plugins
@@ -169,7 +179,7 @@ fun! SetupVAM()
   exec 'set runtimepath+='.vam_install_path.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['abolish','Gundo','ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX','LustyJuggler','snipmate-snippets','vimwiki','bufexplorer.zip','matchit.zip','Solarized','yankstack','ctrlp','The_NERD_Commenter','surround','EasyMotion','The_NERD_tree','Tabular','fugitive','repeat','taglist','Syntastic'], {'auto_install' : 0})
+  call vam#ActivateAddons(['abolish','Gundo','ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX','LustyJuggler','snipmate-snippets','vimwiki','bufexplorer.zip','matchit.zip','Solarized','yankstack','ctrlp','The_NERD_Commenter','surround','EasyMotion','The_NERD_tree','Tabular','fugitive','repeat','taglist','Syntastic','ack'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into vam_install_path/plugin-name directory
