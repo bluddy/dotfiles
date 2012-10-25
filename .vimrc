@@ -80,9 +80,19 @@ nnoremap X "_X
 nnoremap Y y$
 " Prevent ex mode from Q
 nnoremap Q <nop> 
-" Replace W with w when trying to save but not when followed/preceded by any
-" other letter
-cnoreabbrev W w
+
+" Replace Wq with wq etc
+if has("user_commands")
+    command! -bang -nargs=? -complete=file E e<bang> <args>
+    command! -bang -nargs=? -complete=file W w<bang> <args>
+    command! -bang -nargs=? -complete=file Wq wq<bang> <args>
+    command! -bang -nargs=? -complete=file WQ wq<bang> <args>
+    command! -bang Wa wa<bang>
+    command! -bang WA wa<bang>
+    command! -bang Q q<bang>
+    command! -bang QA qa<bang>
+    command! -bang Qa qa<bang>
+endif
 
 " Make going down/up long lines easier
 nnoremap j gj
@@ -95,7 +105,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 nnoremap <C-l> :nohlsearch<CR><C-l>
-nnoremap <silent> <leader>j :LustyJuggler<CR>
+nnoremap <silent> <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
 nnoremap <silent> <F5> :GundoToggle<CR>
 
