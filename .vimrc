@@ -72,6 +72,12 @@ set virtualedit=block  " Make block editing better
 " Make paste mode easy
 set pastetoggle=<F2>
 
+" Make status line appear on one window
+set ls=2
+
+" Make Ctrl-P and others not search certain files
+set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp
+
 " Map jk to esc
 inoremap jk <Esc>
 " Map x so it doesn't record (we don't need single characters in registers)
@@ -105,7 +111,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 nnoremap <C-l> :nohlsearch<CR><C-l>
-nnoremap <silent> <Leader>j :LustyJuggler<CR>
+nnoremap <Leader>lj :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
 nnoremap <silent> <F5> :GundoToggle<CR>
 
@@ -115,6 +121,10 @@ let mapleader = ","
 
 " Haskell options
 au FileType haskell setlocal tabstop=8 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
+
+" Configure browser for haskell_doc.vim -- warning: only for mac!!!
+let g:haddock_browser = "open"
+let g:haddock_browser_callformat = "%s %s"
 
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
@@ -127,7 +137,6 @@ let g:alternateExtensions_ML="mli"
 let g:LustyJugglerSuppressRubyWarning=1  " Suppress Lusty Juggler's ruby messages
 let g:LustyJugglerDefaultMappings=0 " Don't use LJ's defaults
 
-
 if has("autocmd")
 	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
 	autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
@@ -136,6 +145,7 @@ if has("autocmd")
 	" Remove search highlighting for insert mode
 	autocmd InsertEnter * :setlocal nohlsearch
 	autocmd InsertLeave * :setlocal hlsearch
+	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
 endif
 
 " ------------- VAM ---------------------
@@ -189,7 +199,7 @@ fun! SetupVAM()
   exec 'set runtimepath+='.vam_install_path.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['abolish','Gundo','ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX','LustyJuggler','snipmate-snippets','vimwiki','bufexplorer.zip','matchit.zip','Solarized','yankstack','ctrlp','The_NERD_Commenter','surround','EasyMotion','The_NERD_tree','Tabular','fugitive','repeat','taglist','Syntastic','ack'], {'auto_install' : 0})
+  call vam#ActivateAddons(['abolish','Gundo','ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX','LustyJuggler','snipmate-snippets','vimwiki','bufexplorer.zip','matchit.zip','Solarized','yankstack','ctrlp','The_NERD_Commenter','surround','EasyMotion','The_NERD_tree','Tabular','fugitive','repeat','taglist','Syntastic','ack','vimux','vim-signature','Powerline','mayansmoke','tslime','glsl'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into vam_install_path/plugin-name directory

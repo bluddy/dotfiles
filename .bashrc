@@ -1,4 +1,4 @@
-PS1="\h:\W$ "
+PS1="\e[0;34m[\h:\W]\$ \e[m "
 
 # Setting PATH for Python 2.7
 # The orginal version is saved in .bash_profile.pysave
@@ -10,6 +10,8 @@ export EDITOR=/usr/bin/vim
 
 alias ll="ls -l"
 alias ..="cd .."
+alias latexmk='latexmk -pdf -pvc'
+alias vlc='open -a /Applications/VLC.app/Contents/MacOS/VLC'
 
 # MacPorts Installer addition on 2011-08-31_at_22:24:51: adding an appropriate PATH variable for use with MacPorts.
 export PATH=/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH
@@ -38,7 +40,8 @@ fi
 export PATH=~/source/alpha5/bin:$PATH
 
 # Add ocaml stuff to the path, and other ocaml constants
-source /Users/yotambarnoy/ocamlbrew/ocaml-4.00.0/etc/ocamlbrew.bashrc
+# source /Users/yotambarnoy/ocamlbrew/ocaml-4.00.0/etc/ocamlbrew.bashrc
+eval `opam config -env`
 
 # Add Cabal to path
 export PATH=~/Library/Haskell/bin:~/.cabal/bin:$PATH
