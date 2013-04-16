@@ -1,4 +1,5 @@
-PS1="\e[0;34m[\h:\W]\$ \e[m "
+PS1="\[\e[0;34m\]\h:\W\$ \[\e[m\]"
+#PS1="\h:\W\$ "
 
 # Setting PATH for Python 2.7
 # The orginal version is saved in .bash_profile.pysave
@@ -12,9 +13,17 @@ alias ll="ls -l"
 alias ..="cd .."
 alias latexmk='latexmk -pdf -pvc'
 alias vlc='open -a /Applications/VLC.app/Contents/MacOS/VLC'
+alias ugrad='ssh ybarnoy1@ugrad1.cs.jhu.edu'
+alias scpu='scp $1 ybarnoy1@usgrad1.cs.jhu.edu:$2'
+alias d='dirs -v'
+alias pd=pushd
+alias pd2='pushd +2'
+alias pd3='pushd +3'
+alias pd4='pushd +4'
 
 # MacPorts Installer addition on 2011-08-31_at_22:24:51: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH
+#export PATH=/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
 export C_INCLUDE_PATH=/opt/local/include
 export CPLUS_INCLUDE_PATH=/opt/local/include
 export LIBRARY_PATH=/opt/local/lib
@@ -32,9 +41,9 @@ export LSCOLORS=gxfxcxdxbxegedabagacad
 export CLASSPATH=.:/opt/local/share/java/commons-cli.jar
 
 # Git command completion
-if [ -f /opt/local/etc/bash_completion ]; then
-	. /opt/local/etc/bash_completion 
-fi
+#if [ -f /opt/local/etc/bash_completion ]; then
+	#. /opt/local/etc/bash_completion 
+#fi
 
 # Add dbtoaster to path
 export PATH=~/source/alpha5/bin:$PATH
@@ -57,9 +66,7 @@ export PSPPATH="$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
 export PATH="$PATH:$PSPPATH"
 
 # Add certain directories to the directory stack
-pushd -n $HOME/Documents/Johns\ Hopkins/Machine\ Learning/ >/dev/null
-pushd -n /Users/yotambarnoy/Documents/eclipse_workspace/MachineLearning/ >/dev/null
-pushd -n /Users/yotambarnoy/source/dbtoaster/ >/dev/null
+pushd -n /Users/yotambarnoy/source/damsl/ >/dev/null
 
 # Add support for JOCL for Java: OpenCL bindings
 JOCLPATH=$HOME/source/jogamp/jocl/dist
