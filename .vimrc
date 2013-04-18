@@ -52,15 +52,18 @@ fun! SetupVAM()
 
     " Tell VAM which plugins to fetch & load:
     call vam#ActivateAddons([
-        \'abolish', 'Gundo', 'ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX', 
-        \'LustyJuggler', 'snipmate-snippets', 'unimpaired', 'vimwiki', 
-        \'bufexplorer.zip', 'matchit.zip', 'Solarized', 'yankstack', 'ctrlp',
-        \'The_NERD_Commenter', 'surround', 'EasyMotion', 'The_NERD_tree',
-        \'Tabular', 'fugitive', 'repeat', 'taglist', 'Syntastic',
-        \'ack', 'vimux', 'vim-signature', 'Powerline', 'mayansmoke',
-        \'tslime', 'glsl', 'textobj-lastpat', 'textobj-user', 'textobj-syntax', 
-        \'space'
+        \  'abolish', 'Gundo', 'ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX'
+        \, 'LustyJuggler', 'snipmate-snippets', 'unimpaired', 'vimwiki' 
+        \, 'bufexplorer.zip', 'matchit.zip', 'Solarized', 'yankstack', 'ctrlp'
+        \, 'The_NERD_Commenter', 'surround', 'EasyMotion', 'The_NERD_tree'
+        \, 'Tabular', 'fugitive', 'repeat', 'taglist', 'Syntastic'
+        \, 'ack', 'vimux', 'vim-signature', 'Powerline', 'mayansmoke'
+        \, 'tslime', 'glsl', 'textobj-lastpat', 'textobj-user', 'textobj-syntax'
+        \, 'space', "github:nelstrom/vim-visual-star-search"
         \], {'auto_install' : 0})
+    "disabled: 
+    ", 'neocomplcache', 'Headlights', 'AutoTag' 
+    "
     " Textobj-lastpat: make a text object / for the last pattern searched for
     " space: make space a generic repeat for all movement commands
     " repeat: Make . repeat plugin commands
@@ -95,6 +98,9 @@ function! QuickfixFilenames()
   return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
 endfunction
 " --------- End code
+
+" For remaining plugins (e.g. merlin)
+execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
 
@@ -212,6 +218,11 @@ if has("autocmd")
 endif
 
 " Remaps ------------------------------------
+"
+" Better leader
+let mapleader = ","
+" Replace , with \ for back searching
+noremap \ ,
 
 " Before we remap, we need to call yankstack setup
 call yankstack#setup()
@@ -246,11 +257,6 @@ nmap <silent> <leader>n :silent :nohlsearch<CR>
 nnoremap <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
 
-" Better leader
-let mapleader = ","
-" Replace , with \ for back searching
-noremap \ ,
-
 " Allow C-p and C-n to filter command line
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
@@ -272,13 +278,40 @@ let g:alternateExtensions_ML="mli"
 let g:LustyJugglerSuppressRubyWarning=1  " Suppress Lusty Juggler's ruby messages
 let g:LustyJugglerDefaultMappings=0 " Don't use LJ's defaults
 
-" For ocaml files with extra syntax. This really slows stuff down though
-" let g:syntastic_ocaml_use_ocamlbuild = 1
-
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
 
 " Configure browser for haskell_doc.vim -- warning: only for mac!!!
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
+
+" Make merlin use neocomplcache (omni-complete)
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+
+" For ocaml files with extra syntax. This really slows stuff down though
+" let g:syntastic_ocaml_use_ocamlbuild = 1
+let g:syntastic_ocaml_checkers=['merlin']
+
+" Easymotion remap to s
+nmap s <Leader><Leader>
+vmap s <Leader><Leader>
+"let g:EasyMotion_mapping_f = 'sf'
+"let g:EasyMotion_mapping_F = 'sF'
+"let g:EasyMotion_mapping_t = 'st'
+"let g:EasyMotion_mapping_T = 'sT'
+"let g:EasyMotion_mapping_w = 'sw'
+"let g:EasyMotion_mapping_W = 'sW'
+"let g:EasyMotion_mapping_b = 'sb'
+"let g:EasyMotion_mapping_B = 'sB'
+"let g:EasyMotion_mapping_e = 'se'
+"let g:EasyMotion_mapping_E = 'sE'
+"let g:EasyMotion_mapping_ge = 'sge'
+"let g:EasyMotion_mapping_gE = 'sgE'
+"let g:EasyMotion_mapping_j = 'sj'
+"let g:EasyMotion_mapping_k = 'sk'
+"let g:EasyMotion_mapping_n = 'sn'
+"let g:EasyMotion_mapping_N = 'sN'
 

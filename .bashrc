@@ -49,7 +49,6 @@ export CLASSPATH=.:/opt/local/share/java/commons-cli.jar
 export PATH=~/source/alpha5/bin:$PATH
 
 # Add ocaml stuff to the path, and other ocaml constants
-# source /Users/yotambarnoy/ocamlbrew/ocaml-4.00.0/etc/ocamlbrew.bashrc
 eval `opam config -env`
 
 # Add Cabal to path
