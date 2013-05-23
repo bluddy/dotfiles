@@ -53,17 +53,23 @@ fun! SetupVAM()
     " Tell VAM which plugins to fetch & load:
     call vam#ActivateAddons([
         \  'abolish', 'Gundo', 'ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX'
-        \, 'LustyJuggler', 'snipmate-snippets', 'unimpaired', 'vimwiki' 
+        \, 'LustyJuggler' 
+        \, 'UltiSnips'
+        \, 'unimpaired', 'vimwiki' 
         \, 'bufexplorer.zip', 'matchit.zip', 'Solarized', 'yankstack', 'ctrlp'
         \, 'The_NERD_Commenter', 'surround', 'EasyMotion', 'The_NERD_tree'
-        \, 'Tabular', 'fugitive', 'repeat', 'taglist', 'Syntastic'
-        \, 'ack', 'vimux', 'vim-signature', 'Powerline', 'mayansmoke'
+        \, 'Tabular', 'repeat', 'taglist', 'Syntastic'
+        \, 'ack', 'ag', 'vimux', 'vim-signature', 'vim-powerline', 'mayansmoke'
         \, 'tslime', 'glsl', 'textobj-lastpat', 'textobj-user', 'textobj-syntax'
-        \, 'space', "github:nelstrom/vim-visual-star-search"
+        \, 'textobj-line', 'Tagbar'
+        \, "github:nelstrom/vim-visual-star-search", 'SuperTab%1643'
+        \, "github:bluddy/vim-insert-operator"
+        \, 'fugitive', 'vim-startify', 'RelOps'
+        \, "github:bolted/vim-tmux-navigator"
+        \, "github:dhruvasagar/vim-table-mode"
         \], {'auto_install' : 0})
     "disabled: 
-    ", 'neocomplcache', 'Headlights', 'AutoTag' 
-    "
+    ", 'neocomplcache', 'Headlights', 'AutoTag', 'space', 'powerline'
     " Textobj-lastpat: make a text object / for the last pattern searched for
     " space: make space a generic repeat for all movement commands
     " repeat: Make . repeat plugin commands
@@ -97,12 +103,23 @@ function! QuickfixFilenames()
   endfor
   return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
 endfunction
+
+"
 " --------- End code
+
+" For keeping info between sessions
+set viminfo='500,f1,<500,:500,@500,/500
 
 " For remaining plugins (e.g. merlin)
 execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
+
+"colorscheme solarized
+"let g:solarized_termcolors=256
+"let g:solarized_visibility="high"
+"let g:solarized_contrast="high"
+set background=light
 
 " allow backspacing over everything
 set backspace=indent,eol,start
@@ -149,10 +166,6 @@ set showmatch
 " Wrap all keys including backspace
 set whichwrap=b,s,h,l,<,>,[,]
 
-set background=light
-"colorscheme solarized
-"let g:solarized_termcolors=256
-
 set clipboard=unnamed
 
 " Prevent breaking up of lines
@@ -182,10 +195,7 @@ set pastetoggle=<F2>
 set ls=2
 
 " Make Ctrl-P and others not search certain files
-set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o
-let g:ctrlp_custom_ignore = {
-	\ 'dir': '\v\/bin$'
-  \ }
+set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,*/_build/*
 
 " Replace Wq with wq etc
 if has("user_commands")
@@ -204,17 +214,46 @@ endif
 " Grep sometimes doesn't display a filename
 set grepprg=grep\ -nH\ $*
 
+" Move all swap files to one directory
+set dir=~/temp/swp
+
+" Sessions: don't save some things
+set ssop-=options
+set ssop-=folds
+
+
 if has("autocmd")
+  augroup languages
+    autocmd!
 	autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
-	autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
+	autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    " Make sure quickfix always opens at the bottom
+    autocmd FileType qf wincmd J
+	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+  augroup END
+  augroup fugitive
+    autocmd!
 	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
 	autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
 	" Don't flood open buffers with fugitive files
 	autocmd BufReadPost fugitive://* set bufhidden=delete
+  augroup END
+  augroup highlight
+    autocmd!
 	" Remove search highlighting for insert mode
 	autocmd InsertEnter * :setlocal nohlsearch
 	autocmd InsertLeave * :setlocal hlsearch
-	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+  augroup END
+  augroup relative
+    autocmd!
+    autocmd InsertEnter * call NumberIfPresent('n')
+    autocmd InsertLeave * call NumberIfPresent('r')
+    autocmd WinEnter * call NumberIfPresent('r')
+    autocmd WinLeave * call NumberIfPresent('n')
+    autocmd FocusGained * call NumberIfPresent('r')
+    autocmd FocusLost * call NumberIfPresent('n')
+    autocmd CursorMoved * call NumberIfPresent('r')
+  augroup END
 endif
 
 " Remaps ------------------------------------
@@ -239,10 +278,13 @@ nnoremap Y y$
 nnoremap Q <nop> 
 
 " Make going down/up long lines easier
-nnoremap j gj
-nnoremap k gk
+nnoremap <silent> j :<C-U>call JkJumps('j')<CR>
+nnoremap <silent> k :<C-U>call JkJumps('k')<CR>
 nnoremap gj j
 nnoremap gk k
+
+" Make entering a : take away relative numbering
+nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
 " Make moving around windows easier
 nnoremap <C-h> <C-w>h
@@ -256,11 +298,70 @@ nmap <silent> <leader>n :silent :nohlsearch<CR>
 
 nnoremap <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
+nnoremap <silent> <F9> :TagbarToggle<CR>
 
 " Allow C-p and C-n to filter command line
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
+" Fix the & command (repeat subst with flags)
+nnoremap & :&&<CR> 
+xnoremap & :&&<CR>
+
+" Allow easy omnicompletion
+inoremap <C-j> <C-x><C-o>
+
+" QuickFix toggle {{{
+nnoremap <silent> <leader>q :call QuickFixToggle()<cr>
+let g:quickfix_is_open = 0
+
+" toggle quickfix window
+fun! QuickFixToggle()
+    if g:quickfix_is_open
+        cclose
+        let g:quickfix_is_open = 0
+        execute g:quickfix_return_to_window . "wincmd w"
+    else
+        let g:quickfix_return_to_window = winnr()
+        copen
+        let g:quickfix_is_open = 1
+    endif
+endf
+" }}}
+
+" Turn big j/k jumps into proper jumps {{{
+if !exists('g:jk_jumps_minimum_lines')
+    let g:jk_jumps_minimum_lines = 3
+endif
+
+function! JkJumps(key) range
+    " For 1 line, add g for display lines
+    if v:count1 <= 1 
+        exec "normal! ".v:count1."g".a:key
+    elseif v:count1 < g:jk_jumps_minimum_lines 
+        exec "normal! ".v:count1.a:key
+    else
+        exec "normal! ".v:count1.a:key
+        let target = line('.')
+        let bkey = 'k'
+        if (a:key ==# 'k')
+            let bkey = 'j'
+        endif
+        exec "normal! ".v:count1.bkey
+        exec "normal! ".target."G"
+    endif
+endfunction
+
+function! NumberIfPresent(m)
+    if(&relativenumber == 1 || &number == 1)
+        if(a:m ==# 'n')
+            set number
+        else
+            set relativenumber
+        endif
+    endif
+endfunction
+" }}}
 
 " Variable settings for plugins --------------
 
@@ -295,23 +396,68 @@ let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 " let g:syntastic_ocaml_use_ocamlbuild = 1
 let g:syntastic_ocaml_checkers=['merlin']
 
-" Easymotion remap to s
-nmap s <Leader><Leader>
-vmap s <Leader><Leader>
-"let g:EasyMotion_mapping_f = 'sf'
-"let g:EasyMotion_mapping_F = 'sF'
-"let g:EasyMotion_mapping_t = 'st'
-"let g:EasyMotion_mapping_T = 'sT'
-"let g:EasyMotion_mapping_w = 'sw'
-"let g:EasyMotion_mapping_W = 'sW'
-"let g:EasyMotion_mapping_b = 'sb'
-"let g:EasyMotion_mapping_B = 'sB'
-"let g:EasyMotion_mapping_e = 'se'
-"let g:EasyMotion_mapping_E = 'sE'
-"let g:EasyMotion_mapping_ge = 'sge'
-"let g:EasyMotion_mapping_gE = 'sgE'
-"let g:EasyMotion_mapping_j = 'sj'
-"let g:EasyMotion_mapping_k = 'sk'
-"let g:EasyMotion_mapping_n = 'sn'
-"let g:EasyMotion_mapping_N = 'sN'
+" Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
+let g:EasyMotion_leader_key = 's'
 
+" Make supertab use context to determine what to fill in
+let g:SuperTabDefaultCompletionType = "context"
+
+" Startify bookmarks
+let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
+
+" Test function -----------------
+"
+
+function! WinMove(key) 
+  let t:curwin = winnr()
+  let t:curbuf = winbufnr(0)
+  if (a:key==#'h' || a:key==#'l')
+      let t:horiz = 1
+      let t:cursize = winheight(0)
+      let t:order = "s"
+      if (a:key ==#'h') 
+          let t:oppkey = 'l' 
+      endif
+      if (a:key ==#'l') 
+          let t:oppkey = 'h'
+      endif
+    else
+      let t:horiz = 0
+      let t:cursize = winwidth(0)
+      let t:order = "v"
+      if (a:key ==#'j') 
+          let t:oppkey = 'k' 
+      endif
+      if (a:key ==#'k') 
+          let t:oppkey = 'j' 
+      endif
+  endif
+
+  " Move
+  exec "wincmd ".a:key 
+
+  let t:newwin = winnr()
+  if (t:curwin !=# t:newwin) "we've moved windows
+    if (t:horiz)
+      let t:newsize = winheight(0)
+    else " vert
+      let t:newsize = winwidth(0)
+    endif
+    if (t:cursize ==# t:newsize) " windows have same dimension
+        exec "wincmd " . t:order
+        exec "buffer " . t:curbuf
+        " split the window to the old buffer
+        "exec t:order . bufname(t:curbuf)
+
+        " go to the old window
+        exec "wincmd ". t:oppkey
+        wincmd c
+    endif
+  endif
+
+endfunction
+ 
+nnoremap <Left>  :call WinMove('h')<cr>
+nnoremap <Up>    :call WinMove('k')<cr>
+nnoremap <Right> :call WinMove('l')<cr>
+nnoremap <Down>  :call WinMove('j')<cr>
