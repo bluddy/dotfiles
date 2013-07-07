@@ -243,7 +243,6 @@ set dir=~/temp/swp
 set ssop-=options
 set ssop-=folds
 
-
 if has("autocmd")
   augroup languages
     autocmd!
@@ -276,6 +275,17 @@ if has("autocmd")
     autocmd FocusGained * call NumberIfPresent('r')
     autocmd FocusLost * call NumberIfPresent('n')
     autocmd CursorMoved * call NumberIfPresent('r')
+  augroup END
+  " Settings for unite
+  augroup unite_custom
+    autocmd FileType unite call s:unite_my_settings()
+    function! s:unite_my_settings()"{{{
+        nmap <buffer> <ESC> <Plug>(unite_exit)
+        imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+        imap <buffer> <C-j> <Plug>(unite_select_next_line)
+        imap <buffer> <C-k> <Plug>(unite_select_previous_line)
+    endfunction"}}}
+
   augroup END
 endif
 
@@ -340,10 +350,22 @@ nnoremap <silent> <leader>q :call QuickFixToggle()<cr>
 let g:quickfix_is_open = 0
 
 " Gundo.vim {{{2
-nnoremap <Leader>u :GundoToggle<CR>
+nnoremap <Leader>r :GundoToggle<CR>
 
+" Map Unite into some good keybindings
+nnoremap <silent> <Leader>uu :<C-u>Unite 
+    \ -start-insert buffer file_rec file_mru<CR>
+nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
+nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+
+" Make youcompleteme not complete in unite
+let g:ycm_filetype_blacklist = {
+    \ 'unite' : 1,
+    \}
+ 
 " toggle quickfix window
-fun! QuickFixToggle()
+function! QuickFixToggle()
     if g:quickfix_is_open
         cclose
         let g:quickfix_is_open = 0
