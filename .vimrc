@@ -52,27 +52,49 @@ fun! SetupVAM()
 
     " Tell VAM which plugins to fetch & load:
     call vam#ActivateAddons([
-        \  'abolish', 'Gundo', 'ReplaceWithRegister', 'LaTeX-Suite_aka_Vim-LaTeX'
+        \  'abolish', 'Gundo'
         \, 'LustyJuggler' 
         \, 'UltiSnips'
-        \, 'unimpaired', 'vimwiki' 
+        \, 'unimpaired'
         \, 'bufexplorer.zip', 'matchit.zip', 'Solarized', 'yankstack', 'ctrlp'
         \, 'The_NERD_Commenter', 'surround', 'EasyMotion', 'The_NERD_tree'
         \, 'Tabular', 'repeat', 'taglist', 'Syntastic'
         \, 'ack', 'ag', 'vimux', 'vim-signature', 'vim-powerline', 'mayansmoke'
-        \, 'tslime', 'glsl', 'textobj-lastpat', 'textobj-user', 'textobj-syntax'
-        \, 'textobj-line', 'Tagbar'
-        \, "github:nelstrom/vim-visual-star-search", 'SuperTab%1643'
-        \, "github:bluddy/vim-insert-operator"
-        \, 'fugitive', 'vim-startify', 'RelOps'
-        \, "github:bolted/vim-tmux-navigator"
-        \, "github:dhruvasagar/vim-table-mode"
+        \, 'tslime'
+        \, 'glsl' 
+        \, 'textobj-lastpat'
+        \, 'textobj-user'
+        \, 'textobj-syntax'
+        \, 'textobj-line'
+        \, 'Tagbar'
+        \, 'github:nelstrom/vim-visual-star-search'
+        \, 'vim-startify'
+        \, 'github:dhruvasagar/vim-table-mode'
+        \, 'Rainbow_Parentheses_Improved'
+        \, 'vimproc'
+        \, 'vimshell'
+        \, 'github:regedarek/ZoomWin'
+        \, 'NrrwRgn'
+        \, 'vim-snippets'
+        \, 'vimbufsync'
+        \, 'merlin'
+        \, 'YouCompleteMe'
+        \, 'unite'
+        \, 'fugitive'
         \], {'auto_install' : 0})
     "disabled: 
+    ", 'SuperTab%1643'
     ", 'neocomplcache', 'Headlights', 'AutoTag', 'space', 'powerline'
     " Textobj-lastpat: make a text object / for the last pattern searched for
     " space: make space a generic repeat for all movement commands
     " repeat: Make . repeat plugin commands
+    " RelOps: just use relative nums always
+    " 'github:bolted/vim-tmux-navigator'
+    " 'github:bluddy/vim-insert-operator'
+    "'ReplaceWithRegister' 
+    " , 'vimwiki' 
+    "     'unite'
+    "'LaTeX-Suite_aka_Vim-LaTeX'
 
     " Addons are put into plugin_root_dir/plugin-name directory
     " unless those directories exist. Then they are activated.
@@ -110,15 +132,15 @@ endfunction
 " For keeping info between sessions
 set viminfo='500,f1,<500,:500,@500,/500
 
-" For remaining plugins (e.g. merlin)
+" For remaining plugins (e.g. k3)
 execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
 
 "colorscheme solarized
-"let g:solarized_termcolors=256
-"let g:solarized_visibility="high"
-"let g:solarized_contrast="high"
+let g:solarized_termcolors=256
+let g:solarized_visibility="high"
+let g:solarized_contrast="high"
 set background=light
 
 " allow backspacing over everything
@@ -195,7 +217,7 @@ set pastetoggle=<F2>
 set ls=2
 
 " Make Ctrl-P and others not search certain files
-set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,*/_build/*
+set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,_build/*
 
 " Replace Wq with wq etc
 if has("user_commands")
@@ -226,7 +248,8 @@ if has("autocmd")
   augroup languages
     autocmd!
 	autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
-	autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    "autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
 	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
@@ -287,14 +310,15 @@ nnoremap gk k
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
 " Make moving around windows easier
+" Turn off stupid bash support
+let g:BASH_Ctrl_j = 'off' 
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " clear highlights
-" nnoremap <C-l> :nohlsearch<CR><C-l>  " Conflicts with movement
-nmap <silent> <leader>n :silent :nohlsearch<CR>
+nnoremap <silent> <leader>n :silent :nohlsearch<CR>
 
 nnoremap <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
@@ -309,11 +333,14 @@ nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
 " Allow easy omnicompletion
-inoremap <C-j> <C-x><C-o>
+" inoremap <C-j> <C-x><C-o>
 
 " QuickFix toggle {{{
 nnoremap <silent> <leader>q :call QuickFixToggle()<cr>
 let g:quickfix_is_open = 0
+
+" Gundo.vim {{{2
+nnoremap <Leader>u :GundoToggle<CR>
 
 " toggle quickfix window
 fun! QuickFixToggle()
@@ -365,8 +392,8 @@ endfunction
 
 " Variable settings for plugins --------------
 
-" Gundo.vim {{{2
-map <Leader>u :GundoToggle<CR>
+:set rtp+=$HOME/.vim/vim-addons/merlin/vim/merlin
+:set rtp+=$HOME/.vim/vim-addons/merlin/vim/vimbufsync
 
 " Space.vim {{{2
 " Makes space awesome in normal mode
@@ -392,8 +419,6 @@ if !exists('g:neocomplcache_force_omni_patterns')
 endif
 let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
-" For ocaml files with extra syntax. This really slows stuff down though
-" let g:syntastic_ocaml_use_ocamlbuild = 1
 let g:syntastic_ocaml_checkers=['merlin']
 
 " Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
@@ -405,59 +430,11 @@ let g:SuperTabDefaultCompletionType = "context"
 " Startify bookmarks
 let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 
-" Test function -----------------
-"
+" CtrlP extensions
+let g:ctrlp_extensions = ['tag', 'buffertag']
 
-function! WinMove(key) 
-  let t:curwin = winnr()
-  let t:curbuf = winbufnr(0)
-  if (a:key==#'h' || a:key==#'l')
-      let t:horiz = 1
-      let t:cursize = winheight(0)
-      let t:order = "s"
-      if (a:key ==#'h') 
-          let t:oppkey = 'l' 
-      endif
-      if (a:key ==#'l') 
-          let t:oppkey = 'h'
-      endif
-    else
-      let t:horiz = 0
-      let t:cursize = winwidth(0)
-      let t:order = "v"
-      if (a:key ==#'j') 
-          let t:oppkey = 'k' 
-      endif
-      if (a:key ==#'k') 
-          let t:oppkey = 'j' 
-      endif
-  endif
+" Change ultisnip expand triggers 
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
-  " Move
-  exec "wincmd ".a:key 
-
-  let t:newwin = winnr()
-  if (t:curwin !=# t:newwin) "we've moved windows
-    if (t:horiz)
-      let t:newsize = winheight(0)
-    else " vert
-      let t:newsize = winwidth(0)
-    endif
-    if (t:cursize ==# t:newsize) " windows have same dimension
-        exec "wincmd " . t:order
-        exec "buffer " . t:curbuf
-        " split the window to the old buffer
-        "exec t:order . bufname(t:curbuf)
-
-        " go to the old window
-        exec "wincmd ". t:oppkey
-        wincmd c
-    endif
-  endif
-
-endfunction
- 
-nnoremap <Left>  :call WinMove('h')<cr>
-nnoremap <Up>    :call WinMove('k')<cr>
-nnoremap <Right> :call WinMove('l')<cr>
-nnoremap <Down>  :call WinMove('j')<cr>
