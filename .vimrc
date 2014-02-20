@@ -52,37 +52,57 @@ fun! SetupVAM()
 
     " Tell VAM which plugins to fetch & load:
     call vam#ActivateAddons([
-        \  'abolish', 'Gundo'
+        \  'abolish'
+        \, 'Gundo'
         \, 'LustyJuggler' 
         \, 'UltiSnips'
         \, 'unimpaired'
-        \, 'bufexplorer.zip', 'matchit.zip', 'Solarized', 'yankstack', 'ctrlp'
-        \, 'The_NERD_Commenter', 'surround', 'EasyMotion', 'The_NERD_tree'
-        \, 'Tabular', 'repeat', 'taglist', 'Syntastic'
-        \, 'ack', 'ag', 'vimux', 'vim-signature', 'vim-powerline', 'mayansmoke'
+        \, 'bufexplorer.zip'
+        \, 'matchit.zip' 
+        \, 'Solarized'
+        \, 'ctrlp'
+        \, 'The_NERD_Commenter'
+        \, 'surround'
+        \, 'The_NERD_tree'
+        \, 'Tabular'
+        \, 'repeat'
+        \, 'taglist'
+        \, 'Syntastic'
+        \, 'ack'
+        \, 'ag'
+        \, 'vimux'
+        \, 'vim-signature'
+        \, 'vim-airline'
+        \, 'mayansmoke'
         \, 'tslime'
         \, 'glsl' 
         \, 'textobj-lastpat'
         \, 'textobj-user'
         \, 'textobj-syntax'
         \, 'textobj-line'
-        \, 'Tagbar'
         \, 'github:nelstrom/vim-visual-star-search'
         \, 'vim-startify'
         \, 'github:dhruvasagar/vim-table-mode'
         \, 'Rainbow_Parentheses_Improved'
-        \, 'vimproc'
-        \, 'vimshell'
         \, 'github:regedarek/ZoomWin'
         \, 'NrrwRgn'
         \, 'vim-snippets'
         \, 'vimbufsync'
-        \, 'merlin'
-        \, 'YouCompleteMe'
-        \, 'unite'
         \, 'fugitive'
+        \, 'vim-sneak'
+        \, 'github:bluddy/vim-yankstack'
+        \, 'vimproc'
+        \, 'vimshell'
+        \, 'neocomplete'
+        \, 'unite'
+        \, 'github:wellle/targets.vim'
+        \, 'vim-howdoi'
+        \, 'github:supasorn/vim-easymotion'
         \], {'auto_install' : 0})
     "disabled: 
+        "\, 'YouCompleteMe'
+    "\, 'Tagbar'
+    "\, 'vim-easy-align'
     ", 'SuperTab%1643'
     ", 'neocomplcache', 'Headlights', 'AutoTag', 'space', 'powerline'
     " Textobj-lastpat: make a text object / for the last pattern searched for
@@ -111,6 +131,13 @@ fun! SetupVAM()
 endfun
 call SetupVAM()
 
+" Stuff not for macvim (version problem)
+"if !has("gui_macvim")
+    "call vam#ActivateAddons([
+        "\ 'YouCompleteMe'
+        "\], {'auto_install' : 0})
+"endif
+
 " --------- End VAM ----------------
 " -------- Qargs code
 " from here: http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim/5686810#5686810
@@ -133,7 +160,7 @@ endfunction
 set viminfo='500,f1,<500,:500,@500,/500
 
 " For remaining plugins (e.g. k3)
-execute pathogen#infect()
+"execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
 
@@ -151,6 +178,7 @@ set shiftwidth=4
 
 " 4 stops
 set tabstop=4
+set softtabstop=4
 
 set expandtab
 
@@ -219,6 +247,11 @@ set ls=2
 " Make Ctrl-P and others not search certain files
 set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,_build/*
 
+" Make vim batch screen updates
+set lazyredraw
+
+highlight DiffText ctermbg=LightBlue
+
 " Replace Wq with wq etc
 if has("user_commands")
     command! -bang -nargs=? -complete=file E e<bang> <args>
@@ -248,6 +281,8 @@ if has("autocmd")
     autocmd!
 	autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    "let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
+    "autocmd FileType ocaml source s:path
     "autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
@@ -294,12 +329,23 @@ endif
 " Better leader
 let mapleader = ","
 " Replace , with \ for back searching
-noremap \ ,
+" Unnecessary with sneak
+"nnoremap \ , 
+
+" For sneak, use \
+nmap \ <Plug>SneakPrevious
+
+" For Easymotion
+nmap <SPACE> <leader><leader>s
+vmap <SPACE> <leader><leader>s
 
 " Before we remap, we need to call yankstack setup
 call yankstack#setup()
 nmap <Esc>p <Plug>yankstack_substitute_older_paste
 nmap <Esc>P <Plug>yankstack_substitute_newer_paste
+
+" Map Howdoi
+nmap <Esc>h <Plug>Howdoi
 
 " Map jk to esc
 inoremap jk <Esc>
@@ -359,6 +405,10 @@ nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
 nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
 
+" Map easyalign to visual mode's enter
+vnoremap <silent> <CR> :EasyAlign<CR>
+vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
+
 " Make youcompleteme not complete in unite
 let g:ycm_filetype_blacklist = {
     \ 'unite' : 1,
@@ -414,9 +464,6 @@ endfunction
 
 " Variable settings for plugins --------------
 
-:set rtp+=$HOME/.vim/vim-addons/merlin/vim/merlin
-:set rtp+=$HOME/.vim/vim-addons/merlin/vim/vimbufsync
-
 " Space.vim {{{2
 " Makes space awesome in normal mode
 let g:space_disable_select_mode=1
@@ -435,16 +482,29 @@ let g:tex_flavor='latex' " Get vim to label the file properly
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 
+" Merlin
+let s:ocamlmerlin=substitute(system('opam config var share'),'\n$','','''') .  "/ocamlmerlin"
+execute "set rtp+=".s:ocamlmerlin."/vim"
+execute "set rtp+=".s:ocamlmerlin."/vimbufsync"
+
 " Make merlin use neocomplcache (omni-complete)
 if !exists('g:neocomplcache_force_omni_patterns')
   let g:neocomplcache_force_omni_patterns = {}
 endif
 let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+
 let g:syntastic_ocaml_checkers=['merlin']
 
 " Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
-let g:EasyMotion_leader_key = 's'
+"let g:EasyMotion_leader_key = 's'
 
 " Make supertab use context to determine what to fill in
 let g:SuperTabDefaultCompletionType = "context"
@@ -454,6 +514,7 @@ let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 
 " CtrlP extensions
 let g:ctrlp_extensions = ['tag', 'buffertag']
+let g:ctrlp_working_path_mode = 'wra'
 
 " Change ultisnip expand triggers 
 let g:UltiSnipsExpandTrigger="<c-j>"

@@ -1,5 +1,5 @@
-PS1="\[\e[0;34m\]\h:\W\$ \[\e[m\]"
-#PS1="\h:\W\$ "
+#PS1="\[\e[0;34m\]\h:\W\$ \[\e[m\]"
+PS1="\h:\W\$ "
 
 # Setting PATH for Python 2.7
 # The orginal version is saved in .bash_profile.pysave
@@ -7,7 +7,14 @@ PS1="\[\e[0;34m\]\h:\W\$ \[\e[m\]"
 # export PATH
 
 #use vim as default editor
-export EDITOR=/usr/bin/vim 
+export EDITOR=/opt/local/bin/vim 
+
+if [[ -n "$TMUX" ]]; then
+    export TERM="screen-256color"
+else
+    export TERM="xterm-256color"
+fi
+export TERM="xterm-256color"
 
 alias ll="ls -l"
 alias ..="cd .."
@@ -20,15 +27,17 @@ alias pd=pushd
 alias pd2='pushd +2'
 alias pd3='pushd +3'
 alias pd4='pushd +4'
+# haskell tags
+alias htags='find . -name \*.\*hs | xargs hasktags -c'
 
 # MacPorts Installer addition on 2011-08-31_at_22:24:51: adding an appropriate PATH variable for use with MacPorts.
-#export PATH=/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
-export C_INCLUDE_PATH=/opt/local/include
-export CPLUS_INCLUDE_PATH=/opt/local/include
-export LIBRARY_PATH=/opt/local/lib
-export CPPFLAGS="-I/opt/local/include:$CPPFLAGS"
-export LDFLAGS="-L/opt/local/lib:$LDFLAGS"
+export PATH=/opt/local/bin:/opt/local/sbin/:usr/local/bin:$PATH
+export C_INCLUDE_PATH=/opt/local/include:/usr/local/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/opt/local/include:/usr/local/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/opt/local/lib:/usr/local/lib
+#export CPPFLAGS="-I/opt/local/include:$CPPFLAGS"
+#export LDFLAGS="-L/opt/local/lib:$LDFLAGS"
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/Library/ENV/pkgconfig/10.8
 
 # Finished adapting your PATH environment variable for use with MacPorts.
 
@@ -41,18 +50,16 @@ export LSCOLORS=gxfxcxdxbxegedabagacad
 export CLASSPATH=.:/opt/local/share/java/commons-cli.jar
 
 # Git command completion
-#if [ -f /opt/local/etc/bash_completion ]; then
-	#. /opt/local/etc/bash_completion 
+#if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
+#      . /opt/local/etc/profile.d/bash_completion.sh
 #fi
 
-# Add dbtoaster to path
-export PATH=~/source/alpha5/bin:$PATH
-
 # Add ocaml stuff to the path, and other ocaml constants
-eval `opam config -env`
+#eval `opam config -env`
+. /Users/yotambarnoy/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
 # Add Cabal to path
-export PATH=~/Library/Haskell/bin:~/.cabal/bin:$PATH
+export PATH=~/Library/Haskell/bin:~/.cabal/bin:~/Library/Haskell/ghc-7.6.3/lib/cabal-install-1.18.0.2/bin:$PATH
 
 # Make command line history ignore some things, like starting with space and plain ls
 export HISTIGNORE="ls:[bf]g:exit:ll"
@@ -64,9 +71,6 @@ export PSPSDK="$PSPDEV/psp/sdk"
 export PSPPATH="$PSPDEV/bin:$PSPDEV/psp/bin:$PSPSDK/bin"
 export PATH="$PATH:$PSPPATH"
 
-# Add certain directories to the directory stack
-pushd -n /Users/yotambarnoy/source/damsl/ >/dev/null
-
 # Add support for JOCL for Java: OpenCL bindings
 JOCLPATH=$HOME/source/jogamp/jocl/dist
 export CLASSPATH=$CLASSPATH:$JOCLPATH/jocl.jar:$JOCLPATH/lib/gluegen-rt.jar
@@ -74,4 +78,11 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$JOCLPATH/lib
 
 # Add support for OGRE3d
 export OGRE_HOME=$HOME/tools/ogre-1.8
+
+# Add tex to path
+# Use tlmgr to manage tex stuff
+export PATH="/usr/texbin:$PATH"
+
+# Add postgres to path
+export PATH="/Applications/Postgres93.app/Contents/MacOS/bin:$PATH"
 
