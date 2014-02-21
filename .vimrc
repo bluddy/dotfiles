@@ -90,7 +90,6 @@ fun! SetupVAM()
         \, 'vimbufsync'
         \, 'fugitive'
         \, 'vim-sneak'
-        \, 'github:bluddy/vim-yankstack'
         \, 'vimproc'
         \, 'vimshell'
         \, 'neocomplete'
@@ -98,6 +97,7 @@ fun! SetupVAM()
         \, 'github:wellle/targets.vim'
         \, 'vim-howdoi'
         \, 'github:supasorn/vim-easymotion'
+        \, 'github:bluddy/vim-yankstack'
         \], {'auto_install' : 0})
     "disabled: 
         "\, 'YouCompleteMe'
