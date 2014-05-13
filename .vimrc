@@ -96,10 +96,14 @@ fun! SetupVAM()
         \, 'unite'
         \, 'github:wellle/targets.vim'
         \, 'vim-howdoi'
-        \, 'github:supasorn/vim-easymotion'
         \, 'github:bluddy/vim-yankstack'
+        \, 'github:christoomey/vim-tmux-navigator'
+        \, 'github:tpope/vim-vinegar'
+        \, 'github:Peeja/vim-cdo'
         \], {'auto_install' : 0})
     "disabled: 
+        "\, 'EasyMotion'
+        "\, 'gitv'
         "\, 'YouCompleteMe'
     "\, 'Tagbar'
     "\, 'vim-easy-align'
@@ -174,11 +178,11 @@ set background=light
 set backspace=indent,eol,start
 
 " 4 space indent
-set shiftwidth=4
+set shiftwidth=2
 
 " 4 stops
-set tabstop=4
-set softtabstop=4
+set tabstop=2
+set softtabstop=2
 
 set expandtab
 
@@ -251,6 +255,8 @@ set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,_build/*
 set lazyredraw
 
 highlight DiffText ctermbg=LightBlue
+highlight EnclosingExpression ctermbg=Red
+highlight airline_x_to_airline_y_inactive ctermfg=LightGreen
 
 " Replace Wq with wq etc
 if has("user_commands")
@@ -334,6 +340,9 @@ let mapleader = ","
 
 " For sneak, use \
 nmap \ <Plug>SneakPrevious
+let g:sneak#streak = 1
+" Ignorecase
+let g:sneak#use_ic_scs = 0
 
 " For Easymotion
 nmap <SPACE> <leader><leader>s
@@ -362,16 +371,20 @@ nnoremap <silent> k :<C-U>call JkJumps('k')<CR>
 nnoremap gj j
 nnoremap gk k
 
+" Swap " and ' for easy access to register
+nnoremap " '
+nnoremap ' "
+
 " Make entering a : take away relative numbering
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
 " Make moving around windows easier
 " Turn off stupid bash support
 let g:BASH_Ctrl_j = 'off' 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+"nnoremap <C-h> <C-w>h
+"nnoremap <C-j> <C-w>j
+"nnoremap <C-k> <C-w>k
+"nnoremap <C-l> <C-w>l
 
 " clear highlights
 nnoremap <silent> <leader>n :silent :nohlsearch<CR>

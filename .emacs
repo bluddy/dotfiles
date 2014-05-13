@@ -1,26 +1,12 @@
 (require 'package)
 
+;; MELPA is the most up-to-date archive
 (add-to-list 'package-archives
-			 '("marmalade" . "http://marmalade-repo.org/packages/") t)
+	                 '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;;(add-to-list 'package-archives
+;;			 '("marmalade" . "http://marmalade-repo.org/packages/") ;;t)
 (package-initialize)
 (require 'evil)
-
-;; Acejump EVil integration
-(defmacro evil-enclose-ace-jump (&rest body)
-  `(let ((old-mark (mark))
-	 (ace-jump-mode-scope 'window))
-     (remove-hook 'pre-command-hook #'evil-visual-pre-command t)
-     (remove-hook 'post-command-hook #'evil-visual-post-command t)
-     (unwind-protect
-	 (progn
-	   ,@body
-	   (recursive-edit))
-       (if (evil-visual-state-p)
-	   (progn
-	     (add-hook 'pre-command-hook #'evil-visual-pre-command nil t)
-	     (add-hook 'post-command-hook #'evil-visual-post-command nil t)
-	     (set-mark old-mark))
-	 (push-mark old-mark)))))
 
 ;;Make evil-mode up/down operate in screen lines instead of logical lines
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -76,20 +62,10 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-;(define-key evil-insert-state-map "j" #'cofi/maybe-exit)
-;(evil-define-command cofi/maybe-exit ()
-  ;:repeat change
-  ;(interactive)
-  ;(let ((modified (buffer-modified-p)))
-    ;(let ((evt (read-event (format "Insert %c to exit insert state" ?k) nil 0.3)))
-      ;(cond
-       ;((null evt) (insert "j"))
-       ;((and (integerp evt) (char-equal evt ?k))
-					;;(condition-case nil (evil-forward-char) (error nil) )
-	;(set-buffer-modified-p modified)
-	;(push 'escape unread-command-events))
-       ;(t (insert "j") (setq unread-command-events (append unread-command-events
-							   ;(list evt))))
-       ;))))
+; Make ctrl-hjkl move around windows
+(define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
 (evil-mode 1)
