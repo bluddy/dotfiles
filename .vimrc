@@ -82,7 +82,6 @@ fun! SetupVAM()
         \, 'textobj-line'
         \, 'github:nelstrom/vim-visual-star-search'
         \, 'vim-startify'
-        \, 'github:dhruvasagar/vim-table-mode'
         \, 'Rainbow_Parentheses_Improved'
         \, 'github:regedarek/ZoomWin'
         \, 'NrrwRgn'
@@ -105,6 +104,8 @@ fun! SetupVAM()
         "\, 'EasyMotion'
         "\, 'gitv'
         "\, 'YouCompleteMe'
+        "\, 'github:dhruvasagar/vim-table-mode'
+        " Messed up the } keystroke
     "\, 'Tagbar'
     "\, 'vim-easy-align'
     ", 'SuperTab%1643'
