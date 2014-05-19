@@ -1,105 +1,78 @@
 " put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
-
-fun! EnsureVamIsOnDisk(plugin_root_dir)
-    " windows users may want to use http://mawercer.de/~marc/vam/index.php
-    " to fetch VAM, VAM-known-repositories and the listed plugins
-    " without having to install curl, 7-zip and git tools first
-    " -> BUG [4] (git-less installation)
-    let vam_autoload_dir = a:plugin_root_dir.'/vim-addon-manager/autoload'
-    if isdirectory(vam_autoload_dir)
-    return 1
-    else
-    if 1 == confirm("Clone VAM into ".a:plugin_root_dir."?","&Y\n&N")
-        " I'm sorry having to add this reminder. Eventually it'll pay off.
-        call confirm("Remind yourself that most plugins ship with ".
-                    \"documentation (README*, doc/*.txt). It is your ".
-                    \"first source of knowledge. If you can't find ".
-                    \"the info you're looking for in reasonable ".
-                    \"time ask maintainers to improve documentation")
-        call mkdir(a:plugin_root_dir, 'p')
-        execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '.
-                    \ shellescape(a:plugin_root_dir, 1).'/vim-addon-manager'
-        " VAM runs helptags automatically when you install or update
-        " plugins
-        exec 'helptags '.fnameescape(a:plugin_root_dir.'/vim-addon-manager/doc')
-    endif
-    return isdirectory(vam_autoload_dir)
-    endif
-endfun
+set hidden          " Allow buffers to go into the background
 
 fun! SetupVAM()
-    " Set advanced options like this:
-    " let g:vim_addon_manager = {}
-    " let g:vim_addon_manager.key = value
-    " Pipe all output into a buffer which gets written to disk
-    " let g:vim_addon_manager.log_to_buf =1
+  let c = get(g:, 'vim_addon_manager', {})
+  let g:vim_addon_manager = c
+  let c.plugin_root_dir = expand('$HOME', 1) . '/.vim/vim-addons'
+  " most used options you may want to use:
+  " let c.log_to_buf = 1
+  " let c.auto_install = 0
+  let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+  if !isdirectory(c.plugin_root_dir.'/vim-addon-manager/autoload')
+    execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '
+        \       shellescape(c.plugin_root_dir.'/vim-addon-manager', 1)
+  endif
+  call vam#ActivateAddons([], {'auto_install' : 0})
+endfun
 
-    " Example: drop git sources unless git is in PATH. Same plugins can
-    " be installed from www.vim.org. Lookup MergeSources to get more control
-    " let g:vim_addon_manager.drop_git_sources = !executable('git')
-    " let g:vim_addon_manager.debug_activation = 1
+call SetupVAM()
 
-    " VAM install location:
-    let c = get(g:, 'vim_addon_manager', {})
-    let g:vim_addon_manager = c
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    if !EnsureVamIsOnDisk(c.plugin_root_dir)
-    echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
-    return
-    endif
-    let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+" Easy, simple regex substitutes
+VAMActivate abolish
+VAMActivate Gundo
+" Allows switching quickly between buffers
+VAMActivate LustyJuggler 
+VAMActivate UltiSnips
+VAMActivate unimpaired
+VAMActivate bufexplorer.zip
+VAMActivate matchit.zip 
+VAMActivate Solarized
+VAMActivate ctrlp
+VAMActivate The_NERD_Commenter
+VAMActivate surround
+VAMActivate The_NERD_tree
+VAMActivate Tabular
+VAMActivate repeat
+VAMActivate taglist
+VAMActivate Syntastic
+VAMActivate ack
+VAMActivate ag
+VAMActivate vimux
+VAMActivate vim-signature
+VAMActivate vim-airline
+VAMActivate mayansmoke
+VAMActivate tslime%4931
+VAMActivate glsl 
+VAMActivate textobj-lastpat
+VAMActivate textobj-user
+VAMActivate textobj-syntax
+VAMActivate textobj-line
+VAMActivate vim-visual-star-search
+" Nice opening screen
+VAMActivate vim-startify
+VAMActivate Rainbow_Parentheses_Improved
+VAMActivate ZoomWin
+VAMActivate NrrwRgn
+VAMActivate vim-snippets
+VAMActivate vimbufsync
+VAMActivate fugitive
+" Quick two-char searching; also replaces easymotion
+VAMActivate vim-sneak
+VAMActivate vimproc
+VAMActivate vimshell
+VAMActivate neocomplete
+VAMActivate unite
+VAMActivate github:wellle/targets.vim
+VAMActivate vim-howdoi
+VAMActivate github:bluddy/vim-yankstack
+VAMActivate github:christoomey/vim-tmux-navigator
+" Enhances using netrw in a window
+VAMActivate github:tpope/vim-vinegar
+" Allows operations over entire quicklist
+VAMActivate github:Peeja/vim-cdo
 
-    " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons([
-        \  'abolish'
-        \, 'Gundo'
-        \, 'LustyJuggler' 
-        \, 'UltiSnips'
-        \, 'unimpaired'
-        \, 'bufexplorer.zip'
-        \, 'matchit.zip' 
-        \, 'Solarized'
-        \, 'ctrlp'
-        \, 'The_NERD_Commenter'
-        \, 'surround'
-        \, 'The_NERD_tree'
-        \, 'Tabular'
-        \, 'repeat'
-        \, 'taglist'
-        \, 'Syntastic'
-        \, 'ack'
-        \, 'ag'
-        \, 'vimux'
-        \, 'vim-signature'
-        \, 'vim-airline'
-        \, 'mayansmoke'
-        \, 'tslime'
-        \, 'glsl' 
-        \, 'textobj-lastpat'
-        \, 'textobj-user'
-        \, 'textobj-syntax'
-        \, 'textobj-line'
-        \, 'github:nelstrom/vim-visual-star-search'
-        \, 'vim-startify'
-        \, 'Rainbow_Parentheses_Improved'
-        \, 'github:regedarek/ZoomWin'
-        \, 'NrrwRgn'
-        \, 'vim-snippets'
-        \, 'vimbufsync'
-        \, 'fugitive'
-        \, 'vim-sneak'
-        \, 'vimproc'
-        \, 'vimshell'
-        \, 'neocomplete'
-        \, 'unite'
-        \, 'github:wellle/targets.vim'
-        \, 'vim-howdoi'
-        \, 'github:bluddy/vim-yankstack'
-        \, 'github:christoomey/vim-tmux-navigator'
-        \, 'github:tpope/vim-vinegar'
-        \, 'github:Peeja/vim-cdo'
-        \], {'auto_install' : 0})
     "disabled: 
         "\, 'EasyMotion'
         "\, 'gitv'
@@ -121,19 +94,6 @@ fun! SetupVAM()
     "     'unite'
     "'LaTeX-Suite_aka_Vim-LaTeX'
 
-    " Addons are put into plugin_root_dir/plugin-name directory
-    " unless those directories exist. Then they are activated.
-    " Activating means adding addon dirs to rtp and do some additional
-    " magic
-
-    " How to find addon names?
-    " - look up source from pool
-    " - (<c-x><c-p> complete plugin names):
-    " You can use name rewritings to point to sources:
-    " ..ActivateAddons(["github:foo", .. => github://foo/vim-addon-foo
-    " ..ActivateAddons(["github:user/repo", .. => github://user/repo
-    " Also see section "2.2. names of addons and addon sources" in VAM's documentation
-endfun
 call SetupVAM()
 
 " Stuff not for macvim (version problem)
@@ -239,7 +199,6 @@ set title
 set visualbell		" don't beep
 set noerrorbells	" don't beep
 
-set hidden          " Allow buffers to go into the background
 
 set virtualedit=block  " Make block editing better
 
@@ -375,6 +334,8 @@ nnoremap gk k
 " Swap " and ' for easy access to register
 nnoremap " '
 nnoremap ' "
+vnoremap " '
+vnoremap ' "
 
 " Make entering a : take away relative numbering
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
