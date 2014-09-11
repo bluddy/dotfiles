@@ -18,7 +18,7 @@
 (key-chord-mode 1)
 
 ;;Not sure why this isn’t the default – it is in vim – but this makes C-u to go up half a page
-(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+(setq evil-want-C-u-scroll t)
 		  
 (evil-define-motion evil-ace-jump-word-mode (count)
   :type exclusive
@@ -31,26 +31,13 @@
    (ace-jump-mode 5)
    (forward-char -1)))
 
+; Add fuzzy completion with C-P
+(define-key evil-normal-state-map (kbd "C-P") 'fiplr-find-file)
+
 (add-hook 'ace-jump-mode-end-hook 'exit-recursive-edit)
 
-;; some proposals for binding:
-
-(define-key evil-motion-state-map (kbd "SPC") 'ace-jump-char-mode)
-(define-key evil-motion-state-map (kbd "C-SPC") 'ace-jump-word-mode)
-
-(define-key evil-operator-state-map (kbd "SPC") 'ace-jump-char-mode) ; similar to f
-(define-key evil-operator-state-map (kbd "C-SPC") 'ace-jump-char-to-mode) ; similar to t
-(define-key evil-operator-state-map (kbd "M-SPC") 'ace-jump-word-mode)
-
-;;Personally I like ace-jump to be limited to the window I’m working in
-(setq ace-jump-mode-scope 'window)
-
-;
-;
-;(defadvice evil-visual-block (before spc-for-char-jump activate)
-;  (define-key evil-motion-state-map (kbd "SPC") #'evil-ace-jump-char-mode))
-
-;; -- end of acejump code
+(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+;;(define-key evil-motion-state-map (kbd "C-SPC") 'ace-jump-word-mode)
 
 
 ;;; esc quits
@@ -69,3 +56,41 @@
 (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
 (evil-mode 1)
+
+; Merlin
+(setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+(setq opam-bin (substring (shell-command-to-string "opam config var bin 2> /dev/null") 0 -1))
+(setq merlin-command (concat opam-bin "/ocamlmerlin"))
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+(require 'merlin)
+
+; Merlin auto-completion
+(setq merlin-use-auto-complete-mode t)
+
+; Evil-jumper: jump like in vim
+(require 'evil-jumper)
+
+; Evil-surround
+(require 'evil-surround)
+(global-evil-surround-mode 1)
+
+; Evil-tabs
+(global-evil-tabs-mode t)
+
+(require 'evil-visualstar)
+
+(require 'evil-indent-textobject)
+
+(require 'evil-numbers)
+
+; Remove toolbar
+(tool-bar-mode -1)
+
+; Cool color themes
+(require 'color-theme)
+(color-theme-initialize)
+
+; Add _ as a word character
+(add-hook 'tuareg-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+(add-hook 'c-mode-common-hook #'(lambda () (modify-syntax-entry ?_ "w")))

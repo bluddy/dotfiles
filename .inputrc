@@ -6,6 +6,7 @@ set completion-map-case on
 
 set bell-style none
 set editing-mode vi
+set show-mode-in-prompt
 
 $if mode=vi
   set keymap vi-command
@@ -15,4 +16,6 @@ $if mode=vi
   "jk": vi-movement-mode
   "\C-p": history-search-backward
   "\C-l": clear-screen
+  "\C-a": beginning-of-line
+  "\C-e": end-of-line
 

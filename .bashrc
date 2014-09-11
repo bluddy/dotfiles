@@ -5,6 +5,12 @@ PS1="\h:\W\$ "
 # The orginal version is saved in .bash_profile.pysave
 # PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
 # export PATH
+export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:$PATH
+export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin:$PATH
+export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/lib/python3.3/site-packages:$PATH
+export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib:$PYTHONPATH
+export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/lib:$PYTHONPATH
 
 #use vim as default editor
 export EDITOR=/opt/local/bin/vim 
@@ -81,7 +87,7 @@ export OGRE_HOME=$HOME/tools/ogre-1.8
 
 # Add tex to path
 # Use tlmgr to manage tex stuff
-export PATH="/usr/texbin:$PATH"
+# export PATH="/usr/texbin:$PATH"
 
 # Add postgres to path
 export PATH="/Applications/Postgres93.app/Contents/MacOS/bin:$PATH"

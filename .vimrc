@@ -23,14 +23,13 @@ call SetupVAM()
 VAMActivate abolish
 VAMActivate Gundo
 " Allows switching quickly between buffers
-VAMActivate LustyJuggler 
+VAMActivate LustyJuggler
 VAMActivate UltiSnips
 VAMActivate unimpaired
 VAMActivate bufexplorer.zip
-VAMActivate matchit.zip 
+VAMActivate matchit.zip
 VAMActivate Solarized
 VAMActivate ctrlp
-VAMActivate The_NERD_Commenter
 VAMActivate surround
 VAMActivate The_NERD_tree
 VAMActivate Tabular
@@ -43,8 +42,8 @@ VAMActivate vimux
 VAMActivate vim-signature
 VAMActivate vim-airline
 VAMActivate mayansmoke
-VAMActivate tslime%4931
-VAMActivate glsl 
+VAMActivate vimux
+VAMActivate glsl
 VAMActivate textobj-lastpat
 VAMActivate textobj-user
 VAMActivate textobj-syntax
@@ -60,21 +59,35 @@ VAMActivate vimbufsync
 VAMActivate fugitive
 " Quick two-char searching; also replaces easymotion
 VAMActivate vim-sneak
+" Asynchronous operations
 VAMActivate vimproc
+" Built-in shell
 VAMActivate vimshell
 VAMActivate neocomplete
 VAMActivate unite
-VAMActivate github:wellle/targets.vim
 VAMActivate vim-howdoi
-VAMActivate github:bluddy/vim-yankstack
+" VAMActivate github:bluddy/vim-yankstack
+VAMActivate github:wellle/targets.vim
 VAMActivate github:christoomey/vim-tmux-navigator
 " Enhances using netrw in a window
 VAMActivate github:tpope/vim-vinegar
 " Allows operations over entire quicklist
 VAMActivate github:Peeja/vim-cdo
+" Automatic commenting
+VAMActivate tComment
+" Visual mode : and Searches only on selected block
+VAMActivate vis
+" DragVisuals to drag blocks of code
+" VAMActivate github:shinokada/dragvisuals.vim
+VAMActivate vimwiki
+" VAMActivate github:vim-scripts/a.vim
+VAMActivate vim-gitgutter
+VAMActivate github:def-lkb/ocp-indent-vim
 
-    "disabled: 
-        "\, 'EasyMotion'
+
+    "disabled:
+" Extends fugitive
+" VAMActivate extradite
         "\, 'gitv'
         "\, 'YouCompleteMe'
         "\, 'github:dhruvasagar/vim-table-mode'
@@ -82,26 +95,11 @@ VAMActivate github:Peeja/vim-cdo
     "\, 'Tagbar'
     "\, 'vim-easy-align'
     ", 'SuperTab%1643'
-    ", 'neocomplcache', 'Headlights', 'AutoTag', 'space', 'powerline'
-    " Textobj-lastpat: make a text object / for the last pattern searched for
-    " space: make space a generic repeat for all movement commands
-    " repeat: Make . repeat plugin commands
-    " RelOps: just use relative nums always
-    " 'github:bolted/vim-tmux-navigator'
-    " 'github:bluddy/vim-insert-operator'
-    "'ReplaceWithRegister' 
-    " , 'vimwiki' 
+    ", 'Headlights', 'AutoTag'
+    "'ReplaceWithRegister'
     "     'unite'
-    "'LaTeX-Suite_aka_Vim-LaTeX'
 
 call SetupVAM()
-
-" Stuff not for macvim (version problem)
-"if !has("gui_macvim")
-    "call vam#ActivateAddons([
-        "\ 'YouCompleteMe'
-        "\], {'auto_install' : 0})
-"endif
 
 " --------- End VAM ----------------
 " -------- Qargs code
@@ -128,6 +126,8 @@ set viminfo='500,f1,<500,:500,@500,/500
 "execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
+
+set t_Co=256
 
 "colorscheme solarized
 let g:solarized_termcolors=256
@@ -209,10 +209,13 @@ set pastetoggle=<F2>
 set ls=2
 
 " Make Ctrl-P and others not search certain files
-set wildignore+=*.cmi,*.cmo,*.annot,*.orig,*.swp,*.o,*/bin/*,_build/*
+set wildignore+=*.cmi,*.cmo,*.cmt,*.cmti,*.cmx,*.annot,*.orig,*.swp,*.o,*/bin/*,_build/*
 
 " Make vim batch screen updates
 set lazyredraw
+
+" Add <> to matched pairs
+set matchpairs+=<:>
 
 highlight DiffText ctermbg=LightBlue
 highlight EnclosingExpression ctermbg=Red
@@ -245,22 +248,23 @@ set ssop-=folds
 if has("autocmd")
   augroup languages
     autocmd!
-	autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
-    "let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
-    "autocmd FileType ocaml source s:path
-    "autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
+    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
+    " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
+    " autocmd FileType ocaml source s:path
+    " autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
 	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
   augroup END
-  augroup fugitive
-    autocmd!
+  " augroup fugitive
+    " autocmd!
 	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-	autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+	" autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
 	" Don't flood open buffers with fugitive files
-	autocmd BufReadPost fugitive://* set bufhidden=delete
-  augroup END
+	" autocmd BufReadPost fugitive://* set bufhidden=delete
+  " augroup END
   augroup highlight
     autocmd!
 	" Remove search highlighting for insert mode
@@ -286,7 +290,6 @@ if has("autocmd")
         imap <buffer> <C-j> <Plug>(unite_select_next_line)
         imap <buffer> <C-k> <Plug>(unite_select_previous_line)
     endfunction"}}}
-
   augroup END
 endif
 
@@ -296,22 +299,41 @@ endif
 let mapleader = ","
 " Replace , with \ for back searching
 " Unnecessary with sneak
-"nnoremap \ , 
+"nnoremap \ ,
 
 " For sneak, use \
 nmap \ <Plug>SneakPrevious
+" For some reason, sneak doesn't map this
+nmap S <Plug>Sneak_S
+nmap s <Plug>Sneak_s
 let g:sneak#streak = 1
 " Ignorecase
 let g:sneak#use_ic_scs = 0
 
 " For Easymotion
-nmap <SPACE> <leader><leader>s
-vmap <SPACE> <leader><leader>s
+" nmap <SPACE> <leader><leader>s
+" vmap <SPACE> <leader><leader>s
+
+" DragVisuals config
+function! Drag(dir)
+  " For this script, put " back to what it does
+  nnoremap " "
+  execute DVB_Drag(a:dir)
+  " execute "normal "."gv".cmd
+  nnoremap " '
+endfunction
+vmap H :<C-U>call Drag("left")<CR>
+vmap J :<C-U>call Drag("down")<CR>
+vmap K :<C-U>call Drag("up")<CR>
+vmap L :<C-U>call Drag("right")<CR>
+vmap <expr> D DVB_Duplicate()
+" Remove any introduced trailing whitespace after moving...
+let g:DVB_TrimWS = 1
 
 " Before we remap, we need to call yankstack setup
-call yankstack#setup()
-nmap <Esc>p <Plug>yankstack_substitute_older_paste
-nmap <Esc>P <Plug>yankstack_substitute_newer_paste
+" call yankstack#setup()
+" nmap <Esc>p <Plug>yankstack_substitute_older_paste
+" nmap <Esc>P <Plug>yankstack_substitute_newer_paste
 
 " Map Howdoi
 nmap <Esc>h <Plug>Howdoi
@@ -323,7 +345,7 @@ nnoremap x "_x
 nnoremap X "_X
 nnoremap Y y$
 " Prevent ex mode from Q
-nnoremap Q <nop> 
+nnoremap Q <nop>
 
 " Make going down/up long lines easier
 nnoremap <silent> j :<C-U>call JkJumps('j')<CR>
@@ -342,7 +364,7 @@ nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
 " Make moving around windows easier
 " Turn off stupid bash support
-let g:BASH_Ctrl_j = 'off' 
+let g:BASH_Ctrl_j = 'off'
 "nnoremap <C-h> <C-w>h
 "nnoremap <C-j> <C-w>j
 "nnoremap <C-k> <C-w>k
@@ -360,7 +382,7 @@ cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
 " Fix the & command (repeat subst with flags)
-nnoremap & :&&<CR> 
+nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
 " Allow easy omnicompletion
@@ -374,7 +396,7 @@ let g:quickfix_is_open = 0
 nnoremap <Leader>r :GundoToggle<CR>
 
 " Map Unite into some good keybindings
-nnoremap <silent> <Leader>uu :<C-u>Unite 
+nnoremap <silent> <Leader>uu :<C-u>Unite
     \ -start-insert buffer file_rec file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
@@ -388,7 +410,7 @@ vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
 let g:ycm_filetype_blacklist = {
     \ 'unite' : 1,
     \}
- 
+
 " toggle quickfix window
 function! QuickFixToggle()
     if g:quickfix_is_open
@@ -410,9 +432,9 @@ endif
 
 function! JkJumps(key) range
     " For 1 line, add g for display lines
-    if v:count1 <= 1 
+    if v:count1 <= 1
         exec "normal! ".v:count1."g".a:key
-    elseif v:count1 < g:jk_jumps_minimum_lines 
+    elseif v:count1 < g:jk_jumps_minimum_lines
         exec "normal! ".v:count1.a:key
     else
         exec "normal! ".v:count1.a:key
@@ -437,6 +459,10 @@ function! NumberIfPresent(m)
 endfunction
 " }}}
 
+function! RemoveTrailing()
+  %s/\s\+$//e
+endfunction
+
 " Variable settings for plugins --------------
 
 " Space.vim {{{2
@@ -458,9 +484,8 @@ let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 
 " Merlin
-let s:ocamlmerlin=substitute(system('opam config var share'),'\n$','','''') .  "/ocamlmerlin"
-execute "set rtp+=".s:ocamlmerlin."/vim"
-execute "set rtp+=".s:ocamlmerlin."/vimbufsync"
+let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
+execute "set rtp+=" . g:opamshare."/merlin/vim"
 
 " Make merlin use neocomplcache (omni-complete)
 if !exists('g:neocomplcache_force_omni_patterns')
@@ -477,6 +502,10 @@ let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 let g:neocomplete#enable_at_startup = 1
 
 let g:syntastic_ocaml_checkers=['merlin']
+let g:syntastic_python_checkers=['flake8']
+" let g:syntastic_cpp_compiler = 'clang++'
+" let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+" let g:syntastic_cpp_check_header = 1
 
 " Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
 "let g:EasyMotion_leader_key = 's'
@@ -491,8 +520,16 @@ let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 let g:ctrlp_extensions = ['tag', 'buffertag']
 let g:ctrlp_working_path_mode = 'wra'
 
-" Change ultisnip expand triggers 
+" Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
+" Make vimwiki use Dropbox
+let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
+
+" NerdTreeIgnore
+let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
+                  \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
+                  \, '\.pyc$[[file]]'
+                  \]
