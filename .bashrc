@@ -35,8 +35,8 @@ export C_INCLUDE_PATH=$BREW/include:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$BREW/include:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=$BREW/lib
 export LD_LIBRARY_PATH=$BREW/lib
-#export CPPFLAGS="-I/usr/local/include:$CPPFLAGS"
-#export LDFLAGS="-L/usr/local/lib:$LDFLAGS"
+export CPPFLAGS="-I/usr/local/include:$CPPFLAGS"
+export LDFLAGS="-L/usr/local/lib:$LDFLAGS"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BREW/lib/pkgconfig:$BREW/Library/ENV/pkgconfig/10.8
 export PYTHONPATH=$BREW/lib/python2.7/site-packages:$BREW/lib/python3.3/site-packages:$PYTHONPATH
 
@@ -70,6 +70,12 @@ export PATH="/Applications/Postgres93.app/Contents/MacOS/bin:$PATH"
 
 # for homebrew
 export HOMEBREW_GITHUB_API_TOKEN=ea641dcbed2232c563a07a57af55367cd5943077
+
+# readline is shadowed by BSD libedit. Have its place handy:
+export READLINE_LIB=$BREW/Cellar/readline/6.3.8/lib
+export READLINE_INCLUDE=$BREW/Cellar/readline/6.3.8/include
+# command line needed to install readline with cabal
+export CABAL_READLINE_ADD='cabal install readline --extra-include-dirs=$READLINE_INCLUDE --extra-lib-dirs=$READLINE_LIB --configure-option=--with-readline-includes=$READLINE_INCLUDE --configure-option=--with-readline-libraries=$READLINE_LIB'
 
 # completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
