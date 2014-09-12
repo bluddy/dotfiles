@@ -24,7 +24,7 @@ VAMActivate abolish
 VAMActivate Gundo
 " Allows switching quickly between buffers
 VAMActivate LustyJuggler
-VAMActivate UltiSnips
+" VAMActivate UltiSnips
 VAMActivate unimpaired
 VAMActivate bufexplorer.zip
 VAMActivate matchit.zip
@@ -500,6 +500,8 @@ let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
