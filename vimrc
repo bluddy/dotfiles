@@ -29,7 +29,6 @@ VAMActivate unimpaired
 VAMActivate bufexplorer.zip
 VAMActivate matchit.zip
 VAMActivate Solarized
-VAMActivate ctrlp
 VAMActivate surround
 VAMActivate The_NERD_tree
 VAMActivate Tabular
@@ -41,13 +40,12 @@ VAMActivate ag
 VAMActivate vimux
 VAMActivate vim-signature
 VAMActivate vim-airline
-VAMActivate mayansmoke
-VAMActivate vimux
 VAMActivate glsl
 VAMActivate textobj-lastpat
 VAMActivate textobj-user
 VAMActivate textobj-syntax
 VAMActivate textobj-line
+VAMActivate textobj-indent
 VAMActivate vim-visual-star-search
 " Nice opening screen
 VAMActivate vim-startify
@@ -65,12 +63,14 @@ VAMActivate vimproc
 VAMActivate vimshell
 VAMActivate neocomplete
 VAMActivate unite
+VAMActivate github:tsukkee/unite-tag
+VAMActivate github:shougo/neomru.vim
 VAMActivate vim-howdoi
 " VAMActivate github:bluddy/vim-yankstack
 VAMActivate github:wellle/targets.vim
 VAMActivate github:christoomey/vim-tmux-navigator
 " Enhances using netrw in a window
-VAMActivate github:tpope/vim-vinegar
+VAMActivate vinegar
 " Allows operations over entire quicklist
 VAMActivate github:Peeja/vim-cdo
 " Automatic commenting
@@ -82,7 +82,14 @@ VAMActivate vis
 VAMActivate vimwiki
 " VAMActivate github:vim-scripts/a.vim
 VAMActivate vim-gitgutter
-VAMActivate github:def-lkb/ocp-indent-vim
+VAMActivate textobj-gitgutter
+VAMActivate ocp-indent
+" Emacs style bindings in command line
+VAMActivate github:tpope/vim-rsi
+" Make diff options easy to activate
+VAMActivate AdvancedDiffOptions
+VAMActivate vim-easy-align
+"" VAMActivate ctrlp
 
 
     "disabled:
@@ -92,12 +99,8 @@ VAMActivate github:def-lkb/ocp-indent-vim
         "\, 'YouCompleteMe'
         "\, 'github:dhruvasagar/vim-table-mode'
         " Messed up the } keystroke
-    "\, 'Tagbar'
-    "\, 'vim-easy-align'
     ", 'SuperTab%1643'
-    ", 'Headlights', 'AutoTag'
     "'ReplaceWithRegister'
-    "     'unite'
 
 call SetupVAM()
 
@@ -398,9 +401,17 @@ nnoremap <Leader>r :GundoToggle<CR>
 " Map Unite into some good keybindings
 nnoremap <silent> <Leader>uu :<C-u>Unite
     \ -start-insert buffer file_rec file_mru<CR>
+nnoremap <silent> <C-p> :<C-u>Unite
+    \ -start-insert buffer file_rec file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
 nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
+nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+if executable('ag')
+  let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --hidden -g'
+endif
 
 " Map easyalign to visual mode's enter
 vnoremap <silent> <CR> :EasyAlign<CR>
@@ -535,3 +546,9 @@ let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
                   \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
                   \, '\.pyc$[[file]]'
                   \]
+"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+nmap <Leader>a <Plug>(EasyAlign)
+
