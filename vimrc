@@ -252,7 +252,7 @@ if has("autocmd")
   augroup languages
     autocmd!
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
-    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte' | nnoremap <LocalLeader>l :<C-u>Locate<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
     " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
     " autocmd FileType ocaml source s:path
@@ -299,7 +299,9 @@ endif
 " Remaps ------------------------------------
 "
 " Better leader
-let mapleader = ","
+nnoremap <SPACE> <Nop>
+let mapleader = "\<SPACE>"
+let maplocalleader = ","
 " Replace , with \ for back searching
 " Unnecessary with sneak
 "nnoremap \ ,
@@ -400,9 +402,9 @@ nnoremap <Leader>r :GundoToggle<CR>
 
 " Map Unite into some good keybindings
 nnoremap <silent> <Leader>uu :<C-u>Unite
-    \ -start-insert buffer file_rec file_mru<CR>
+    \ -start-insert buffer file_rec/async file_mru<CR>
 nnoremap <silent> <C-p> :<C-u>Unite
-    \ -start-insert buffer file_rec file_mru<CR>
+    \ -start-insert buffer file_rec/async file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
 nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>

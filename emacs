@@ -18,6 +18,9 @@
 ; Remove toolbar
 (if window-system
     (tool-bar-mode -1))
+    
+; Rebind alt-h for help
+(global-set-key "\M-h" help-map)
 
 (setq-default indent-tabs-mode nil) ; No tabs allowed
 (show-paren-mode 1) ; Show matching parens like vim
@@ -41,11 +44,6 @@
       :config
       ; Add fuzzy completion with C-P
       (define-key evil-normal-state-map (kbd "C-P") 'fiplr-find-file))
-
-    (use-package ace-jump-mode
-      :ensure ace-jump-mode
-      :config
-      (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode))
 
     ;;; esc quits
     (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -79,7 +77,12 @@
       (progn
         (setq evil-leader/in-all-states 1)
         (global-evil-leader-mode)
-        (evil-leader/set-leader ",")))
+        (evil-leader/set-leader "<SPC>")))
+
+    (use-package ace-jump-mode
+      :ensure ace-jump-mode
+      :config
+      (evil-leader/set-key "<SPC>" 'ace-jump-mode))
 
     (evil-mode 1)
 
@@ -162,13 +165,16 @@
   )
 )
 
+(use-package auto-complete
+  :ensure auto-complete)
+
+;; merlin
+(setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+(setq opam-bin (substring (shell-command-to-string "opam config var bin 2> /dev/null") 0 -1))
+(setq merlin-command (concat opam-bin "/ocamlmerlin"))
+
 (use-package merlin
-  :init
-  (progn
-    (setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
-    (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
-    (setq opam-bin (substring (shell-command-to-string "opam config var bin 2> /dev/null") 0 -1))
-    (setq merlin-command (concat opam-bin "/ocamlmerlin")))
   :config
   (progn
     (add-hook 'tuareg-mode-hook 'merlin-mode)
@@ -204,6 +210,42 @@
     ; flycheck errors on tooltip
     (if window-system
       (custom-set-variables '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages)))
+  )
+)
+
+(use-package projectile
+  :ensure projectile)
+
+(use-package helm
+  :ensure helm
+  :config
+  (progn
+    (use-package helm-projectile
+      :ensure helm-projectile)
+    (setq helm-quick-update t)
+    (setq helm-bookmark-show-location t)
+    (setq helm-buffers-fuzzy-matching t)
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    (define-key helm-map (kbd "C-j") 'helm-next-line)
+    (define-key helm-map (kbd "C-k") 'helm-previous-line)
+
+    ; Custom combination of buffer sources
+    (defun helm-my-buffers ()
+      (interactive)
+      (let
+        ((sources 
+          (append
+            (if (projectile-project-buffer-p (current-buffer) ".")
+              '(helm-source-projectile-files-list)
+              ())
+            '(helm-source-buffers-list
+               helm-source-elscreen
+               helm-source-ctags
+               helm-source-recentf
+               helm-source-locate))))
+        (helm-other-buffer sources "*helm-my-buffers*")))
+
+    (evil-leader/set-key "uu" 'helm-my-buffers)
   )
 )
 

@@ -1,15 +1,5 @@
 PS1="\h:\W\$ "
 
-# Setting PATH for Python 2.7
-# The orginal version is saved in .bash_profile.pysave
-# PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-# export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
-# export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:$PATH
-# export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin:$PATH
-# export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/lib/python3.3/site-packages:$PATH
-# export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib:$PYTHONPATH
-# export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/3.3/lib:$PYTHONPATH
-
 #use vim as default editor
 export EDITOR=$(brew --prefix)/bin/vim 
 
@@ -35,20 +25,14 @@ export C_INCLUDE_PATH=$BREW/include:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$BREW/include:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=$BREW/lib
 export LD_LIBRARY_PATH=$BREW/lib
-export CPPFLAGS="-I/usr/local/include:$CPPFLAGS"
-export LDFLAGS="-L/usr/local/lib:$LDFLAGS"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BREW/lib/pkgconfig:$BREW/Library/ENV/pkgconfig/10.8
 export PYTHONPATH=$BREW/lib/python2.7/site-packages:$BREW/lib/python3.3/site-packages:$PYTHONPATH
+export LDFLAGS="-L/usr/local/lib"
 
 # Make colors nice in bash
 export CLICOLOR=1
 # dir symlink socket pipe exec blockSpecial charSp execWSetuid execWsetGid DirWritableSticky DirWritableNoSticky
 export LSCOLORS=gxfxcxdxbxegedabagacad
-
-# Git command completion
-#if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-#      . /opt/local/etc/profile.d/bash_completion.sh
-#fi
 
 # Add ocaml stuff to the path, and other ocaml constants
 #eval `opam config -env`
