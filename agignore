@@ -1,0 +1,10 @@
+*.hi
+*.dyn_hi
+*.dyn_o
+*.cmi
+*.cmo
+*.cmt
+*.swp
+*.swo
+*.annot
+*.byte
