@@ -1,7 +1,7 @@
 PS1="\h:\W\$ "
 
 #use vim as default editor
-export EDITOR=$(brew --prefix)/bin/vim 
+export EDITOR=$(brew --prefix)/bin/vim
 
 if [[ -n "$TMUX" ]]; then
     export TERM="screen-256color"
@@ -65,3 +65,18 @@ export CABAL_READLINE_ADD="cabal install readline --extra-include-dirs=$READLINE
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
+
+# required for docker?
+export DOCKER_HOST=tcp://192.168.59.103:2375
+
+# fasd awesomeness for quick access to files/dirs
+# eval "$(fasd --init auto)" # slower
+fasd_cache="$HOME/.fasd-init-bash"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
+alias v='f -e vim' # quickly open file with vim
+alias e='f -e emacs' # quickly open file with emacs
+_fasd_bash_hook_cmd_complete v e

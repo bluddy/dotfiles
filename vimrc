@@ -19,8 +19,8 @@ endfun
 
 call SetupVAM()
 
-" Easy, simple regex substitutes
-VAMActivate abolish
+
+VAMActivate abolish " Easy, simple regex substitutes
 VAMActivate Gundo
 " Allows switching quickly between buffers
 VAMActivate LustyJuggler
@@ -85,11 +85,14 @@ VAMActivate vim-gitgutter
 VAMActivate textobj-gitgutter
 VAMActivate ocp-indent
 " Emacs style bindings in command line
-VAMActivate github:tpope/vim-rsi
+VAMActivate rsi
 " Make diff options easy to activate
 VAMActivate AdvancedDiffOptions
 VAMActivate vim-easy-align
 "" VAMActivate ctrlp
+VAMActivate obsession " Easy to handle sessions
+VAMActivate sleuth    " Detect file settings
+VAMActivate eunuch    " Unix commands
 
 
     "disabled:
@@ -412,7 +415,7 @@ nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
 nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
 nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
 if executable('ag')
-  let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --hidden -g'
+  let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
 endif
 
 " Map easyalign to visual mode's enter
