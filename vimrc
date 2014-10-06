@@ -90,9 +90,11 @@ VAMActivate rsi
 VAMActivate AdvancedDiffOptions
 VAMActivate vim-easy-align
 "" VAMActivate ctrlp
-VAMActivate obsession " Easy to handle sessions
-VAMActivate sleuth    " Detect file settings
-VAMActivate eunuch    " Unix commands
+VAMActivate obsession   " Easy to handle sessions
+VAMActivate sleuth      " Detect file settings
+VAMActivate eunuch      " Unix commands
+VAMActivate ghcmod      " Syntax Checking for haskell
+VAMActivate neco-ghc    " Completion for haskell
 
 
     "disabled:
@@ -254,7 +256,7 @@ set ssop-=folds
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte' | nnoremap <LocalLeader>l :<C-u>Locate<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
     " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"

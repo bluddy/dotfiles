@@ -5,12 +5,17 @@ HELPDIR=/usr/local/share/zsh/help
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
+export ZSH_CUSTOM=$HOME/.zsh-custom
+
+source .antigen/antigen.zsh
+
+antigen use oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -50,15 +55,22 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vi-mode brew fasd git-prompt)
+antigen bundle vi-mode
+antigen bundle git
+antigen bundle git-prompt
+antigen bundle pip
+antigen bundle brew
+antigen bundle fasd
+
+antigen theme robbyrussell
+
+antigen apply
 
 # map keys
 bindkey -M viins 'jk' vi-cmd-mode
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^w' backward-kill-word
-
-source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
@@ -79,6 +91,7 @@ alias latexmk='latexmk -pdf -pvc'
 alias vlc='open -a /Applications/VLC.app/Contents/MacOS/VLC'
 # haskell tags
 alias htags='find . -name \*.\*hs | xargs hasktags -c'
+alias vag='cd ~/source/vagrant && vagrant ssh'
 
 export BREW=$(brew --prefix)
 export PATH=$BREW/bin:$BREW/sbin:$PATH
@@ -94,8 +107,11 @@ export LDFLAGS="-L/usr/local/lib"
 #eval `opam config -env`
 . /Users/yotambarnoy/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
+# Add cabal to path
+export PATH="$PATH:$HOME/.cabal/bin"
+#
 # Add postgres to path
-export PATH="/Applications/Postgres93.app/Contents/MacOS/bin:$PATH"
+export PATH="$PATH:/Applications/Postgres93.app/Contents/MacOS/bin"
 
 # for homebrew
 export HOMEBREW_GITHUB_API_TOKEN=ea641dcbed2232c563a07a57af55367cd5943077
