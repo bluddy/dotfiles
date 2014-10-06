@@ -7,12 +7,23 @@ source .antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-history-substring-search
+
 antigen bundle vi-mode
 antigen bundle git
 antigen bundle git-prompt
+antigen bundle cabal
+antigen bundle mercurial
 antigen bundle pip
 antigen bundle brew
 antigen bundle fasd
+antigen bundle python
+antigen bundle ruby
+antigen bundle scala
+antigen bundle tmux
+antigen bundle vagrant
+antigen bundle emacs
 
 antigen theme robbyrussell
 
@@ -23,6 +34,8 @@ bindkey -M viins 'jk' vi-cmd-mode
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^w' backward-kill-word
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
 
 # User configuration
 
@@ -57,7 +70,7 @@ export LDFLAGS="-L/usr/local/lib"
 
 # Add ocaml stuff to the path, and other ocaml constants
 #eval `opam config -env`
-. /Users/yotambarnoy/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+. /Users/yotambarnoy/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Add cabal to path
 export PATH="$PATH:$HOME/.cabal/bin"
