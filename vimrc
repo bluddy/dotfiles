@@ -96,7 +96,6 @@ VAMActivate eunuch      " Unix commands
 VAMActivate ghcmod      " Syntax Checking for haskell
 VAMActivate neco-ghc    " Completion for haskell
 
-
     "disabled:
 " Extends fugitive
 " VAMActivate extradite
@@ -253,15 +252,21 @@ set dir=~/temp/swp
 set ssop-=options
 set ssop-=folds
 
+" Tags should search from current file upwards
+" ; indicates searching up, ./ indicates current file
+set tags=./tags;
+
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces omnifunc=necoghc#omnifunc
-    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte' | nnoremap <LocalLeader>l :<C-u>Locate<CR>
-    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
-    " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
-    " autocmd FileType ocaml source s:path
-    " autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ omnifunc=necoghc#omnifunc
+    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ | nnoremap <LocalLeader>l :<C-u>Locate<CR>
+    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
+        \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
 	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
@@ -504,6 +509,7 @@ let g:haddock_browser_callformat = "%s %s"
 " Merlin
 let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare."/merlin/vim"
+let g:merlin_split_method='never'
 
 " Make merlin use neocomplcache (omni-complete)
 if !exists('g:neocomplcache_force_omni_patterns')
@@ -515,6 +521,7 @@ if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+hi EnclosingExpr ctermbg=2
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
