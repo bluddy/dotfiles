@@ -36,7 +36,7 @@ VAMActivate repeat
 VAMActivate taglist
 VAMActivate Syntastic
 VAMActivate ack
-VAMActivate ag
+VAMActivate github:ervandew/ag
 VAMActivate vimux
 VAMActivate vim-signature
 VAMActivate vim-airline
@@ -95,6 +95,7 @@ VAMActivate sleuth      " Detect file settings
 VAMActivate eunuch      " Unix commands
 VAMActivate ghcmod      " Syntax Checking for haskell
 VAMActivate neco-ghc    " Completion for haskell
+VAMActivate vimfiler    " Shougo's file manager
 
     "disabled:
 " Extends fugitive
@@ -198,7 +199,7 @@ set wrap
 
 " Command completion more useful
 set wildmenu " Show many options
-set wildmode=longest:list  " Complete up to point of ambiguity
+set wildmode=longest:full,full  " Complete up to point of ambiguity
 
 " Show window title
 set title
@@ -265,6 +266,7 @@ if has("autocmd")
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 smarttab shiftround nojoinspaces
         \ | nnoremap <LocalLeader>l :<C-u>Locate<CR>
+        \ | nnoremap <LocalLeader>o :<C-u>Occurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
         \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
@@ -421,6 +423,7 @@ nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
 nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
 nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
 nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
 if executable('ag')
   let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
 endif
@@ -565,4 +568,7 @@ vmap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
 nmap <Leader>a <Plug>(EasyAlign)
+
+" Make vimfiler the default file explorer
+let g:vimfiler_as_default_explorer = 1
 

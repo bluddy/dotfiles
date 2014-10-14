@@ -1,7 +1,8 @@
 # For homebrew
 unalias run-help
 autoload run-help
-HELPDIR=/usr/local/share/zsh/help
+export HELPDIR=/usr/local/share/zsh/help
+export FPATH=/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions:$FPATH
 
 source .antigen/antigen.zsh
 
@@ -58,7 +59,6 @@ alias vlc='open -a /Applications/VLC.app/Contents/MacOS/VLC'
 alias htags='find . -name \*.\*hs | xargs hasktags -c'
 alias vag='cd ~/source/vagrant && vagrant ssh'
 
-export BREW=$(brew --prefix)
 export PATH=$BREW/bin:$BREW/sbin:$PATH
 export C_INCLUDE_PATH=$BREW/include:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$BREW/include:$CPLUS_INCLUDE_PATH
@@ -88,4 +88,7 @@ export READLINE_INCLUDE=$BREW/Cellar/readline/6.3.8/include
 alias cabal_readline_add='cabal install readline --extra-include-dirs=$READLINE_INCLUDE --extra-lib-dirs=$READLINE_LIB --configure-option=--with-readline-includes=$READLINE_INCLUDE --configure-option=--with-readline-libraries=$READLINE_LIB'
 
 export DOCKER_HOST=tcp://192.168.59.103:2375
+
+# for GO
+export GOPATH=$HOME/gocode
 
