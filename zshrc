@@ -70,7 +70,7 @@ export LDFLAGS="-L/usr/local/lib"
 
 # Add ocaml stuff to the path, and other ocaml constants
 #eval `opam config -env`
-. /Users/yotambarnoy/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Add cabal to path
 export PATH="$PATH:$HOME/.cabal/bin"
