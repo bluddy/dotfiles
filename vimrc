@@ -96,6 +96,7 @@ VAMActivate eunuch      " Unix commands
 VAMActivate ghcmod      " Syntax Checking for haskell
 VAMActivate neco-ghc    " Completion for haskell
 VAMActivate vimfiler    " Shougo's file manager
+VAMActivate vinarise    " Shougo's hex editor
 
     "disabled:
 " Extends fugitive
@@ -413,6 +414,7 @@ let g:quickfix_is_open = 0
 nnoremap <Leader>r :GundoToggle<CR>
 
 " Map Unite into some good keybindings
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <silent> <Leader>uu :<C-u>Unite
     \ -start-insert buffer file_rec/async file_mru<CR>
 nnoremap <silent> <C-p> :<C-u>Unite
