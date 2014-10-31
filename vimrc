@@ -53,7 +53,6 @@ VAMActivate Rainbow_Parentheses_Improved
 VAMActivate ZoomWin
 VAMActivate NrrwRgn
 VAMActivate vim-snippets
-VAMActivate vimbufsync
 VAMActivate fugitive
 " Quick two-char searching; also replaces easymotion
 VAMActivate vim-sneak
@@ -61,7 +60,6 @@ VAMActivate vim-sneak
 VAMActivate vimproc
 " Built-in shell
 VAMActivate vimshell
-VAMActivate neocomplete
 VAMActivate unite
 VAMActivate github:tsukkee/unite-tag
 VAMActivate github:shougo/neomru.vim
@@ -83,13 +81,11 @@ VAMActivate vimwiki
 " VAMActivate github:vim-scripts/a.vim
 VAMActivate vim-gitgutter
 VAMActivate textobj-gitgutter
-VAMActivate ocp-indent
+" VAMActivate ocp-indent
 " Emacs style bindings in command line
 VAMActivate rsi
-" Make diff options easy to activate
-VAMActivate AdvancedDiffOptions
 VAMActivate vim-easy-align
-"" VAMActivate ctrlp
+VAMActivate ctrlp
 VAMActivate obsession   " Easy to handle sessions
 VAMActivate sleuth      " Detect file settings
 VAMActivate eunuch      " Unix commands
@@ -97,6 +93,7 @@ VAMActivate ghcmod      " Syntax Checking for haskell
 VAMActivate neco-ghc    " Completion for haskell
 VAMActivate vimfiler    " Shougo's file manager
 VAMActivate vinarise    " Shougo's hex editor
+VAMActivate neocomplete
 
     "disabled:
 " Extends fugitive
@@ -227,7 +224,7 @@ set lazyredraw
 set matchpairs+=<:>
 
 highlight DiffText ctermbg=LightBlue
-highlight EnclosingExpression ctermbg=Red
+highlight EnclosingExpr ctermbg=Red
 highlight airline_x_to_airline_y_inactive ctermfg=LightGreen
 
 " Replace Wq with wq etc
@@ -416,9 +413,9 @@ nnoremap <Leader>r :GundoToggle<CR>
 " Map Unite into some good keybindings
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <silent> <Leader>uu :<C-u>Unite
-    \ -start-insert buffer file_rec/async file_mru<CR>
-nnoremap <silent> <C-p> :<C-u>Unite
-    \ -start-insert buffer file_rec/async file_mru<CR>
+    \ -start-insert file_mru buffer file_rec/async<CR>
+" nnoremap <silent> <C-p> :<C-u>Unite
+"    \ -start-insert buffer file_rec/async file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
 nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
@@ -517,16 +514,15 @@ execute "set rtp+=" . g:opamshare."/merlin/vim"
 let g:merlin_split_method='never'
 
 " Make merlin use neocomplcache (omni-complete)
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+" if !exists('g:neocomplcache_force_omni_patterns')
+"   let g:neocomplcache_force_omni_patterns = {}
+" endif
+" let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
-hi EnclosingExpr ctermbg=2
+" if !exists('g:neocomplete#force_omni_input_patterns')
+"   let g:neocomplete#force_omni_input_patterns = {}
+" endif
+" let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
@@ -574,3 +570,7 @@ nmap <Leader>a <Plug>(EasyAlign)
 " Make vimfiler the default file explorer
 let g:vimfiler_as_default_explorer = 1
 
+" Use current directory as vimshell prompt.
+let g:vimshell_prompt_expr =
+\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
+let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
