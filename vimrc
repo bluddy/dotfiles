@@ -24,7 +24,6 @@ VAMActivate abolish " Easy, simple regex substitutes
 VAMActivate Gundo
 " Allows switching quickly between buffers
 VAMActivate LustyJuggler
-" VAMActivate UltiSnips
 VAMActivate unimpaired
 VAMActivate bufexplorer.zip
 VAMActivate matchit.zip
@@ -38,7 +37,7 @@ VAMActivate Syntastic
 VAMActivate ack
 VAMActivate github:ervandew/ag
 VAMActivate vimux
-VAMActivate vim-signature
+VAMActivate vim-signature " Marks on the side of the screen
 VAMActivate vim-airline
 VAMActivate glsl
 VAMActivate textobj-lastpat
@@ -47,6 +46,7 @@ VAMActivate textobj-syntax
 VAMActivate textobj-line
 VAMActivate textobj-indent
 VAMActivate vim-visual-star-search
+VAMActivate UltiSnips
 " Nice opening screen
 VAMActivate vim-startify
 VAMActivate Rainbow_Parentheses_Improved
@@ -94,6 +94,9 @@ VAMActivate neco-ghc    " Completion for haskell
 VAMActivate vimfiler    " Shougo's file manager
 VAMActivate vinarise    " Shougo's hex editor
 VAMActivate neocomplete
+VAMActivate vim-exchange    " Exchange arguments
+VAMActivate github:coderifous/textobj-word-column.vim  " Column text objects
+
 
     "disabled:
 " Extends fugitive
@@ -329,22 +332,6 @@ let g:sneak#use_ic_scs = 0
 " nmap <SPACE> <leader><leader>s
 " vmap <SPACE> <leader><leader>s
 
-" DragVisuals config
-function! Drag(dir)
-  " For this script, put " back to what it does
-  nnoremap " "
-  execute DVB_Drag(a:dir)
-  " execute "normal "."gv".cmd
-  nnoremap " '
-endfunction
-vmap H :<C-U>call Drag("left")<CR>
-vmap J :<C-U>call Drag("down")<CR>
-vmap K :<C-U>call Drag("up")<CR>
-vmap L :<C-U>call Drag("right")<CR>
-vmap <expr> D DVB_Duplicate()
-" Remove any introduced trailing whitespace after moving...
-let g:DVB_TrimWS = 1
-
 " Before we remap, we need to call yankstack setup
 " call yankstack#setup()
 " nmap <Esc>p <Plug>yankstack_substitute_older_paste
@@ -519,15 +506,20 @@ let g:merlin_split_method='never'
 " endif
 " let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
-" if !exists('g:neocomplete#force_omni_input_patterns')
-"   let g:neocomplete#force_omni_input_patterns = {}
-" endif
-" let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Get rid of mapping of signature so 0 is fast
+if mapcheck("0m?", "n")
+  nunmap 0m?
+endif
 
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']

@@ -55,7 +55,7 @@ export TERM="xterm-256color"
 alias ll="ls -l"
 alias ..="cd .."
 alias latexmk='latexmk -pdf -pvc'
-alias vlc='open -a /Applications/VLC.app/Contents/MacOS/VLC'
+alias vlc='open -a $HOME/Applications/VLC.app/Contents/MacOS/VLC'
 # haskell tags
 alias htags='find . -name \*.\*hs | xargs hasktags -c'
 alias vag='cd ~/source/vagrant && vagrant ssh'
@@ -66,7 +66,7 @@ export CPLUS_INCLUDE_PATH=$MYBREW/include:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=$MYBREW/lib
 export LD_LIBRARY_PATH=$MYBREW/lib
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$MYBREW/lib/pkgconfig:$MYBREW/Library/ENV/pkgconfig/10.8
-export PYTHONPATH=$MYBREW/lib/python2.7/site-packages:$MYBREW/lib/python3.3/site-packages:$PYTHONPATH
+#export PYTHONPATH=$MYBREW/lib/python2.7/site-packages:$MYBREW/lib/python3.3/site-packages:$PYTHONPATH
 export LDFLAGS="-L/usr/local/lib"
 
 # Add ocaml stuff to the path, and other ocaml constants
@@ -79,6 +79,9 @@ export PATH="$PATH:$HOME/.cabal/bin"
 # Add postgres to path
 export PATH="$PATH:/Applications/Postgres93.app/Contents/MacOS/bin"
 
+# Add texbin to path
+export PATH="$PATH:/usr/texbin"
+
 # for homebrew
 export HOMEBREW_GITHUB_API_TOKEN=ea641dcbed2232c563a07a57af55367cd5943077
 
@@ -87,6 +90,11 @@ export READLINE_LIB=$MYBREW/Cellar/readline/6.3.8/lib
 export READLINE_INCLUDE=$MYBREW/Cellar/readline/6.3.8/include
 # command line needed to install readline with cabal
 alias cabal_readline_add='cabal install readline --extra-include-dirs=$READLINE_INCLUDE --extra-lib-dirs=$READLINE_LIB --configure-option=--with-readline-includes=$READLINE_INCLUDE --configure-option=--with-readline-libraries=$READLINE_LIB'
+
+# command for GDK recognizing stuff
+alias gdk_pixbuf_cache='env GDK_PIXBUF_MODULEDIR=$MYBREW/lib/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache'
+
+
 
 export DOCKER_HOST=tcp://192.168.59.103:2375
 
