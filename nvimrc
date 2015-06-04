@@ -1,8 +1,7 @@
-" put this line first in ~/.vimrc
 set nocompatible | filetype indent plugin on | syn on
 set hidden          " Allow buffers to go into the background
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
@@ -18,6 +17,8 @@ Plug 'tpope/vim-eunuch'    " Unix commands
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' " Syntax checking
 Plug 'godlygeek/tabular' " Aligning tables
+Plug 'mileszs/ack.vim'   " Ack plugin
+Plug 'rking/ag.vim'      " Ag plugin
 Plug 'kshenoy/vim-signature'   " Display marks
 Plug 'bling/vim-airline'       " Status line
 Plug 'kana/vim-textobj-lastpat'
@@ -37,6 +38,7 @@ Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'tomtom/tcomment_vim'      " Automatic commenting
 Plug 'vimwiki/vimwiki'         " Wiki in vim
 Plug 'airblade/vim-gitgutter'  " Show git changes in side
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'   " Show register contents
@@ -44,19 +46,16 @@ Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'coderifous/textobj-word-column.vim' " Column text object
 Plug 'Shougo/unite.vim'        " Menu interface
-Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'Shougo/neomru.vim'       " MRU for Unite
-Plug 'Shougo/vinarise.vim'       " MRU for Unite
-Plug 'Shougo/vimfiler.vim'       " MRU for Unite
-Plug 'Shougo/vimshell.vim'       " MRU for Unite
-Plug 'Shougo/neocomplete.vim'       " MRU for Unite
-Plug 'Shougo/vimproc.vim', { 'do': 'make' } " MRU for Unite
+Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
 Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
 Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
 
+
 call plug#end()
 
+" --------- End VAM ----------------
 " -------- Qargs code
 " from here: http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim/5686810#5686810
 command! -nargs=0 -bar Qargs execute 'args' QuickfixFilenames()
@@ -146,7 +145,6 @@ set wrap
 
 " Command completion more useful
 set wildmenu " Show many options
-set wildmode=longest:full,full  " Complete up to point of ambiguity
 
 " Show window title
 set title
@@ -173,6 +171,7 @@ set lazyredraw
 set matchpairs+=<:>
 
 highlight DiffText ctermbg=LightBlue
+highlight EnclosingExpression ctermbg=Red
 highlight airline_x_to_airline_y_inactive ctermfg=LightGreen
 
 " Replace Wq with wq etc
@@ -199,22 +198,15 @@ set dir=~/temp/swp
 set ssop-=options
 set ssop-=folds
 
-" Tags should search from current file upwards
-" ; indicates searching up, ./ indicates current file
-set tags=./tags;
-
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ omnifunc=necoghc#omnifunc
-    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ | nnoremap <LocalLeader>l :<C-u>Locate<CR>
-        \ | nnoremap <LocalLeader>o :<C-u>Occurrences<CR>
-    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
-        \ shiftwidth=4 smarttab shiftround nojoinspaces
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
+    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
+    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
+    " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
+    " autocmd FileType ocaml source s:path
+    " autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
 	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
@@ -257,8 +249,7 @@ endif
 " Remaps ------------------------------------
 "
 " Better leader
-nnoremap <SPACE> <Nop>
-let mapleader = "\<SPACE>"
+let mapleader = " "
 let maplocalleader = ","
 " Replace , with \ for back searching
 " Unnecessary with sneak
@@ -276,6 +267,22 @@ let g:sneak#use_ic_scs = 0
 " For Easymotion
 " nmap <SPACE> <leader><leader>s
 " vmap <SPACE> <leader><leader>s
+
+" DragVisuals config
+function! Drag(dir)
+  " For this script, put " back to what it does
+  nnoremap " "
+  execute DVB_Drag(a:dir)
+  " execute "normal "."gv".cmd
+  nnoremap " '
+endfunction
+vmap H :<C-U>call Drag("left")<CR>
+vmap J :<C-U>call Drag("down")<CR>
+vmap K :<C-U>call Drag("up")<CR>
+vmap L :<C-U>call Drag("right")<CR>
+vmap <expr> D DVB_Duplicate()
+" Remove any introduced trailing whitespace after moving...
+let g:DVB_TrimWS = 1
 
 " Before we remap, we need to call yankstack setup
 " call yankstack#setup()
@@ -300,16 +307,26 @@ nnoremap <silent> k :<C-U>call JkJumps('k')<CR>
 nnoremap gj j
 nnoremap gk k
 
+" Swap " and ' for easy access to register
+nnoremap " '
+nnoremap ' "
+vnoremap " '
+vnoremap ' "
+
 " Make entering a : take away relative numbering
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
 " Make moving around windows easier
 " Turn off stupid bash support
 let g:BASH_Ctrl_j = 'off'
-"nnoremap <C-h> <C-w>h
-"nnoremap <C-j> <C-w>j
-"nnoremap <C-k> <C-w>k
-"nnoremap <C-l> <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
 
 " clear highlights
 nnoremap <silent> <leader>n :silent :nohlsearch<CR>
@@ -337,21 +354,11 @@ let g:quickfix_is_open = 0
 nnoremap <Leader>r :GundoToggle<CR>
 
 " Map Unite into some good keybindings
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <silent> <Leader>uu :<C-u>Unite
-    \ -start-insert file_mru buffer file_rec/async<CR>
-" nnoremap <silent> <C-p> :<C-u>Unite
-"    \ -start-insert buffer file_rec/async file_mru<CR>
+    \ -start-insert buffer file_rec file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
-nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
 nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
-nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
-nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
-nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
-if executable('ag')
-  let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
-endif
 
 " Map easyalign to visual mode's enter
 vnoremap <silent> <CR> :EasyAlign<CR>
@@ -437,15 +444,12 @@ let g:haddock_browser_callformat = "%s %s"
 " Merlin
 let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare."/merlin/vim"
-let g:merlin_split_method='never'
-
-highlight EnclosingExpr ctermbg=Red
 
 " Make merlin use neocomplcache (omni-complete)
-" if !exists('g:neocomplcache_force_omni_patterns')
-"   let g:neocomplcache_force_omni_patterns = {}
-" endif
-" let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
@@ -456,11 +460,6 @@ let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 let g:neocomplete#enable_at_startup = 1
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Get rid of mapping of signature so 0 is fast
-if mapcheck("0m?", "n")
-  nunmap 0m?
-endif
 
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
@@ -480,7 +479,6 @@ let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 " CtrlP extensions
 let g:ctrlp_extensions = ['tag', 'buffertag']
 let g:ctrlp_working_path_mode = 'wra'
-let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
 
 " Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
@@ -495,16 +493,3 @@ let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
                   \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
                   \, '\.pyc$[[file]]'
                   \]
-"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
-nmap <Leader>a <Plug>(EasyAlign)
-
-" Make vimfiler the default file explorer
-let g:vimfiler_as_default_explorer = 1
-
-" Use current directory as vimshell prompt.
-let g:vimshell_prompt_expr =
-\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
-let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '

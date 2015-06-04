@@ -1,5 +1,4 @@
 # For homebrew
-unalias run-help
 autoload run-help
 export HELPDIR=/usr/local/share/zsh/help
 export FPATH=/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions:$FPATH
@@ -35,8 +34,23 @@ bindkey -M viins 'jk' vi-cmd-mode
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^w' backward-kill-word
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
+substring-up-local() {
+    zle set-local-history 1
+    history-substring-search-up
+    zle set-local-history 0
+}
+zle -N substring-up-local
+
+substring-down-local() {
+    zle set-local-history 1
+    history-substring-search-down
+    zle set-local-history 0
+}
+zle -N substring-down-local
+
+bindkey -M vicmd 'k' substring-up-local
+bindkey -M vicmd 'j' substring-down-local
+
 
 # User configuration
 export MYBREW=/usr/local
