@@ -5,7 +5,7 @@ call plug#begin('~/.nvim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
-Plug 'kien/ctrlp.vim'        " Fuzzy file matching
+Plug 'ctrlpvim/ctrlp.vim'        " Fuzzy file matching
 Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
 Plug 'tpope/vim-unimpaired' " Bracket mappings
@@ -38,7 +38,7 @@ Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'tomtom/tcomment_vim'      " Automatic commenting
 Plug 'vimwiki/vimwiki'         " Wiki in vim
 Plug 'airblade/vim-gitgutter'  " Show git changes in side
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'   " Show register contents
@@ -49,9 +49,12 @@ Plug 'Shougo/unite.vim'        " Menu interface
 Plug 'Shougo/neomru.vim'       " MRU for Unite
 Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
+Plug 'rking/ag.vim'            " Simple AG plugin (maybe best)
 Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
 Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
-
+Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
+Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
+Plug 'Shougo/deoplete.nvim'    " Completion
 
 call plug#end()
 
@@ -201,12 +204,14 @@ set ssop-=folds
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces
-    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2 shiftwidth=2 smarttab shiftround nojoinspaces makeprg=ocamlbuild\ '%:~:.:r.byte'
-    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 shiftwidth=4 smarttab shiftround nojoinspaces
-    " let s:path = substitute(system('opam config var share'),'\n$','','''') . "/vim/syntax/ocp-indent.vim"
-    " autocmd FileType ocaml source s:path
-    " autocmd FileType ocaml ~/source/damsl/* setlocal makeprg=~/src/damsl/build.sh
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 
+          \ shiftwidth=2 smarttab shiftround nojoinspaces
+    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
+          \ shiftwidth=2 smarttab shiftround nojoinspaces 
+          \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
+          \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
+    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 
+          \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
 	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl

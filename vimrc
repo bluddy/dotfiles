@@ -6,7 +6,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
-Plug 'kien/ctrlp.vim'        " Fuzzy file matching
+Plug 'ctrlpvim/ctrlp.vim'        " Fuzzy file matching
 Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
 Plug 'tpope/vim-unimpaired' " Bracket mappings
@@ -52,8 +52,12 @@ Plug 'Shougo/vimshell.vim'       " MRU for Unite
 Plug 'Shougo/neocomplete.vim'       " MRU for Unite
 Plug 'Shougo/vimproc.vim', { 'do': 'make' } " MRU for Unite
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
+Plug 'rking/ag.vim'            " Simple AG plugin (maybe best)
 Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
 Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
+Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
+Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
+Plug 'jreybert/vimagit'
 
 call plug#end()
 
@@ -211,8 +215,8 @@ if has("autocmd")
         \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ | nnoremap <LocalLeader>l :<C-u>Locate<CR>
-        \ | nnoremap <LocalLeader>o :<C-u>Occurrences<CR>
+        \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
+        \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
         \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
@@ -314,7 +318,6 @@ let g:BASH_Ctrl_j = 'off'
 " clear highlights
 nnoremap <silent> <leader>n :silent :nohlsearch<CR>
 
-nnoremap <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
@@ -356,6 +359,10 @@ endif
 " Map easyalign to visual mode's enter
 vnoremap <silent> <CR> :EasyAlign<CR>
 vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
+
+nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
+nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
+nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
 
 " Make youcompleteme not complete in unite
 let g:ycm_filetype_blacklist = {
@@ -424,8 +431,6 @@ let g:space_no_search = 1
 " For Alternate extension. Allow switching between interface and source ocaml
 " files
 let g:alternateExtensions_ML="mli"
-let g:LustyJugglerSuppressRubyWarning=1  " Suppress Lusty Juggler's ruby messages
-let g:LustyJugglerDefaultMappings=0 " Don't use LJ's defaults
 
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
@@ -451,6 +456,12 @@ if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1

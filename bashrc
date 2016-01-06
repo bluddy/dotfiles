@@ -50,10 +50,13 @@ export HISTCONTROL="erasedups:ignorespace"
 # export PATH="/usr/texbin:$PATH"
 
 # Add postgres to path
-export PATH="/Applications/Postgres93.app/Contents/MacOS/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"
 
 # for homebrew
-export HOMEBREW_GITHUB_API_TOKEN=ea641dcbed2232c563a07a57af55367cd5943077
+if [ -r ~/.notpublic ]
+then
+    source ~/.notpublic
+fi
 
 # readline is shadowed by BSD libedit. Have its place handy:
 export READLINE_LIB=$BREW/Cellar/readline/6.3.8/lib
@@ -80,3 +83,4 @@ unset fasd_cache
 alias v='f -e vim' # quickly open file with vim
 alias e='f -e emacs' # quickly open file with emacs
 _fasd_bash_hook_cmd_complete v e
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

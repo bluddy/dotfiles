@@ -25,6 +25,11 @@ antigen use oh-my-zsh
  antigen bundle vagrant
  antigen bundle emacs
 
+# Locale
+#
+LC_CTYPE=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+
 antigen theme robbyrussell
 
 antigen apply
@@ -75,29 +80,32 @@ alias htags='find . -name \*.\*hs | xargs hasktags -c'
 alias vag='cd ~/source/vagrant && vagrant ssh'
 
 export PATH=$MYBREW/bin:$MYBREW/sbin:$PATH
-export C_INCLUDE_PATH=$MYBREW/include:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$MYBREW/include:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=$MYBREW/lib
-export LD_LIBRARY_PATH=$MYBREW/lib
+export C_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
+export LD_LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$MYBREW/lib/pkgconfig:$MYBREW/Library/ENV/pkgconfig/10.8
 #export PYTHONPATH=$MYBREW/lib/python2.7/site-packages:$MYBREW/lib/python3.3/site-packages:$PYTHONPATH
-export LDFLAGS="-L/usr/local/lib"
+export LDFLAGS="-L/usr/local/lib -L/usr/local/usr/lib"
 
 # Add ocaml stuff to the path, and other ocaml constants
-#eval `opam config -env`
 . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+eval `opam config env`
 
 # Add cabal to path
 export PATH="$PATH:$HOME/.cabal/bin"
 #
 # Add postgres to path
-export PATH="$PATH:/Applications/Postgres93.app/Contents/MacOS/bin"
+export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin"
 
 # Add texbin to path
 export PATH="$PATH:/usr/texbin"
 
 # for homebrew
-export HOMEBREW_GITHUB_API_TOKEN=ea641dcbed2232c563a07a57af55367cd5943077
+if [ -r ~/.notpublic ]
+then
+    source ~/.notpublic
+fi
 
 # readline is shadowed by BSD libedit. Have its place handy:
 export READLINE_LIB=$MYBREW/Cellar/readline/6.3.8/lib
@@ -115,3 +123,4 @@ export DOCKER_HOST=tcp://192.168.59.103:2375
 # for GO
 export GOPATH=$HOME/gocode
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
