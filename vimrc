@@ -11,10 +11,11 @@ Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
 Plug 'tpope/vim-unimpaired' " Bracket mappings
 Plug 'tpope/vim-repeat'     " Repeat keys
-Plug 'tpope/vim-fugitive'       " Git helper
 Plug 'tpope/vim-vinegar'    " Enhances using netrw in a window
 Plug 'tpope/vim-sleuth'    " Detect file settings
 Plug 'tpope/vim-eunuch'    " Unix commands
+Plug 'tpope/vim-fugitive'       " Git helper
+Plug 'int3/vim-extradite'       " Git: view commit tree
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' " Syntax checking
 Plug 'godlygeek/tabular' " Aligning tables

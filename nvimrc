@@ -1,4 +1,4 @@
-set nocompatible | filetype indent plugin on | syn on
+set nocompatible
 set hidden          " Allow buffers to go into the background
 
 call plug#begin('~/.nvim/plugged')
@@ -58,6 +58,7 @@ Plug 'Shougo/deoplete.nvim'    " Completion
 
 call plug#end()
 
+
 " --------- End VAM ----------------
 " -------- Qargs code
 " from here: http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim/5686810#5686810
@@ -113,9 +114,9 @@ set nowritebackup
 " 50 lines of command line history
 set history=100
 
-set gdefault				" regex defaults to g
-set hlsearch				" Highlight searched things
-set incsearch				" incremental search
+set gdefault                            " regex defaults to g
+set hlsearch                            " Highlight searched things
+set incsearch                           " incremental search
 
 " Set ignorecase on
 set ignorecase
@@ -152,8 +153,8 @@ set wildmenu " Show many options
 " Show window title
 set title
 
-set visualbell		" don't beep
-set noerrorbells	" don't beep
+set visualbell          " don't beep
+set noerrorbells        " don't beep
 
 
 set virtualedit=block  " Make block editing better
@@ -204,30 +205,30 @@ set ssop-=folds
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2 
+    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
           \ shiftwidth=2 smarttab shiftround nojoinspaces
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-          \ shiftwidth=2 smarttab shiftround nojoinspaces 
+          \ shiftwidth=2 smarttab shiftround nojoinspaces
           \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
           \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
-    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4 
+    autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
           \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
-	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+        autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
   augroup END
   " augroup fugitive
     " autocmd!
-	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-	" autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
-	" Don't flood open buffers with fugitive files
-	" autocmd BufReadPost fugitive://* set bufhidden=delete
+        " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
+        " autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+        " Don't flood open buffers with fugitive files
+        " autocmd BufReadPost fugitive://* set bufhidden=delete
   " augroup END
   augroup highlight
     autocmd!
-	" Remove search highlighting for insert mode
-	autocmd InsertEnter * :setlocal nohlsearch
-	autocmd InsertLeave * :setlocal hlsearch
+        " Remove search highlighting for insert mode
+        autocmd InsertEnter * :setlocal nohlsearch
+        autocmd InsertLeave * :setlocal hlsearch
   augroup END
   augroup relative
     autocmd!
@@ -456,6 +457,12 @@ if !exists('g:neocomplcache_force_omni_patterns')
 endif
 let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
+" Make merlin use deoplete (omni-complete)
+if !exists('g:deoplete#omni_patterns')
+  let g:deoplete#omni_patterns = {}
+endif
+let g:deoplete#omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
@@ -463,6 +470,7 @@ let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
+let g:deocomplete#enable_at_startup = 1
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
