@@ -87,9 +87,6 @@ set incsearch  " incremental search
 set ignorecase
 set smartcase
 
-" Syntax highlighting
-syntax on
-filetype plugin indent on
 set mouse=a
 
 set cursorline

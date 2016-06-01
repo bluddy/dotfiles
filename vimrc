@@ -2,6 +2,15 @@
 set nocompatible | filetype indent plugin on | syn on
 set hidden          " Allow buffers to go into the background
 
+fun! SetupPlug()
+  let root_dir = expand('$HOME', 1) . '/.vim'
+  if !filereadable(root_dir . '/autoload/plug.vim')
+    execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  endif
+endfun
+
+call SetupPlug()
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
@@ -29,7 +38,8 @@ Plug 'bronson/vim-visual-star-search' " Search from a visual pattern
 Plug 'mhinz/vim-startify'      " Nice opening screen
 Plug 'chrisbra/NrrwRgn'        " Narrow region like emacs
 Plug 'MarcWeber/vim-addon-mw-utils'     " Needed for snipmate
-Plug 'garbas/vim-snipmate'     " Snippets for snipmate
+Plug 'tomtom/tlib_vim'         " Needed for snipmate
+Plug 'garbas/vim-snipmate'     " Snippets for snipmate (not working great!)
 Plug 'honza/vim-snippets'
 Plug 'def-lkb/vimbufsync'      " Heuristics to identify buffer changes
 Plug 'justinmk/vim-sneak'      " Quick two-char searching; also replaces easymotion
@@ -57,27 +67,13 @@ Plug 'rking/ag.vim'            " Simple AG plugin (maybe best)
 Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
 Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
-Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
+"Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
 Plug 'jreybert/vimagit'
+Plug 'lervag/vimtex'           " Advanced latex plugin
+Plug 'vim-scripts/ReplaceWithRegister'
+" Plug 'vim-scripts/a.vim'       " Alternate file: keeps firing!
 
 call plug#end()
-
-" -------- Qargs code
-" from here: http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim/5686810#5686810
-command! -nargs=0 -bar Qargs execute 'args' QuickfixFilenames()
-command! -nargs=1 -complete=command -bang Qargdo exe 'args '.QuickfixFilenames() | argdo<bang> <args>
-
-function! QuickfixFilenames()
-" Building a hash ensures we get each buffer only once
-  let buffer_numbers = {}
-  for quickfix_item in getqflist()
-    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
-  endfor
-  return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
-endfunction
-
-"
-" --------- End code
 
 " For keeping info between sessions
 set viminfo='500,f1,<500,:500,@500,/500
@@ -98,13 +94,8 @@ set background=light
 " allow backspacing over everything
 set backspace=indent,eol,start
 
-" 4 space indent
 set shiftwidth=2
-
-" 4 stops
 set tabstop=2
-set softtabstop=2
-
 set expandtab
 
 set autoindent
@@ -116,17 +107,14 @@ set nowritebackup
 " 50 lines of command line history
 set history=100
 
-set gdefault				" regex defaults to g
-set hlsearch				" Highlight searched things
-set incsearch				" incremental search
+set gdefault                            " regex defaults to g
+set hlsearch                            " Highlight searched things
+set incsearch                           " incremental search
 
 " Set ignorecase on
 set ignorecase
 set smartcase
 
-" Syntax highlighting
-syntax on
-filetype plugin indent on
 set mouse=a
 
 set cursorline
@@ -156,8 +144,8 @@ set wildmode=longest:full,full  " Complete up to point of ambiguity
 " Show window title
 set title
 
-set visualbell		" don't beep
-set noerrorbells	" don't beep
+set visualbell          " don't beep
+set noerrorbells        " don't beep
 
 
 set virtualedit=block  " Make block editing better
@@ -197,9 +185,6 @@ endif
 " Grep sometimes doesn't display a filename
 set grepprg=grep\ -nH\ $*
 
-" Move all swap files to one directory
-set dir=~/temp/swp
-
 " Sessions: don't save some things
 set ssop-=options
 set ssop-=folds
@@ -222,20 +207,22 @@ if has("autocmd")
         \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
-	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+        autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+    " Add the tex dictionary
+    autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   " augroup fugitive
     " autocmd!
-	" Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-	" autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
-	" Don't flood open buffers with fugitive files
-	" autocmd BufReadPost fugitive://* set bufhidden=delete
+        " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
+        " autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+        " Don't flood open buffers with fugitive files
+        " autocmd BufReadPost fugitive://* set bufhidden=delete
   " augroup END
   augroup highlight
     autocmd!
-	" Remove search highlighting for insert mode
-	autocmd InsertEnter * :setlocal nohlsearch
-	autocmd InsertLeave * :setlocal hlsearch
+        " Remove search highlighting for insert mode
+        autocmd InsertEnter * :setlocal nohlsearch
+        autocmd InsertLeave * :setlocal hlsearch
   augroup END
   augroup relative
     autocmd!
@@ -269,6 +256,10 @@ let maplocalleader = ","
 " Unnecessary with sneak
 "nnoremap \ ,
 
+" Make n always search forward
+nnoremap <expr> n 'Nn'[v:searchforward]
+nnoremap <expr> N 'nN'[v:searchforward]
+
 " For sneak, use \
 nmap \ <Plug>SneakPrevious
 " For some reason, sneak doesn't map this
@@ -288,7 +279,7 @@ let g:sneak#use_ic_scs = 0
 " nmap <Esc>P <Plug>yankstack_substitute_newer_paste
 
 " Map Howdoi
-nmap <Esc>h <Plug>Howdoi
+nnoremap <leader>h <Plug>Howdoi
 
 " Map jk to esc
 inoremap jk <Esc>
@@ -424,11 +415,6 @@ endfunction
 
 " Variable settings for plugins --------------
 
-" Space.vim {{{2
-" Makes space awesome in normal mode
-let g:space_disable_select_mode=1
-let g:space_no_search = 1
-
 " For Alternate extension. Allow switching between interface and source ocaml
 " files
 let g:alternateExtensions_ML="mli"
@@ -446,12 +432,6 @@ execute "set rtp+=" . g:opamshare."/merlin/vim"
 let g:merlin_split_method='never'
 
 highlight EnclosingExpr ctermbg=Red
-
-" Make merlin use neocomplcache (omni-complete)
-" if !exists('g:neocomplcache_force_omni_patterns')
-"   let g:neocomplcache_force_omni_patterns = {}
-" endif
-" let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
@@ -476,15 +456,12 @@ endif
 
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
-" let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler = 'gcc'
 " let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 " let g:syntastic_cpp_check_header = 1
 
 " Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
 "let g:EasyMotion_leader_key = 's'
-
-" Make supertab use context to determine what to fill in
-let g:SuperTabDefaultCompletionType = "context"
 
 " Startify bookmarks
 let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']

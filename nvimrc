@@ -10,15 +10,14 @@ Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
 Plug 'tpope/vim-unimpaired' " Bracket mappings
 Plug 'tpope/vim-repeat'     " Repeat keys
-Plug 'tpope/vim-fugitive'       " Git helper
 Plug 'tpope/vim-vinegar'    " Enhances using netrw in a window
 Plug 'tpope/vim-sleuth'    " Detect file settings
 Plug 'tpope/vim-eunuch'    " Unix commands
+Plug 'tpope/vim-fugitive'       " Git helper
+Plug 'int3/vim-extradite'       " Git: view commit tree
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' " Syntax checking
 Plug 'godlygeek/tabular' " Aligning tables
-Plug 'mileszs/ack.vim'   " Ack plugin
-Plug 'rking/ag.vim'      " Ag plugin
 Plug 'kshenoy/vim-signature'   " Display marks
 Plug 'bling/vim-airline'       " Status line
 Plug 'kana/vim-textobj-lastpat'
@@ -29,7 +28,8 @@ Plug 'bronson/vim-visual-star-search' " Search from a visual pattern
 Plug 'mhinz/vim-startify'      " Nice opening screen
 Plug 'chrisbra/NrrwRgn'        " Narrow region like emacs
 Plug 'MarcWeber/vim-addon-mw-utils'     " Needed for snipmate
-Plug 'garbas/vim-snipmate'     " Snippets for snipmate
+Plug 'tomtom/tlib_vim'         " Needed for snipmate
+Plug 'garbas/vim-snipmate'     " Snippets for snipmate (not working great!)
 Plug 'honza/vim-snippets'
 Plug 'def-lkb/vimbufsync'      " Heuristics to identify buffer changes
 Plug 'justinmk/vim-sneak'      " Quick two-char searching; also replaces easymotion
@@ -38,7 +38,6 @@ Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'tomtom/tcomment_vim'      " Automatic commenting
 Plug 'vimwiki/vimwiki'         " Wiki in vim
 Plug 'airblade/vim-gitgutter'  " Show git changes in side
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'   " Show register contents
@@ -46,6 +45,7 @@ Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'coderifous/textobj-word-column.vim' " Column text object
 Plug 'Shougo/unite.vim'        " Menu interface
+Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'Shougo/neomru.vim'       " MRU for Unite
 Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
@@ -54,6 +54,8 @@ Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
 Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
 Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
+Plug 'jreybert/vimagit'
+Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'Shougo/deoplete.nvim'    " Completion
 
 call plug#end()
@@ -215,7 +217,9 @@ if has("autocmd")
           \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
-        autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+    " Add the tex dictionary
+    autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   " augroup fugitive
     " autocmd!
@@ -255,11 +259,16 @@ endif
 " Remaps ------------------------------------
 "
 " Better leader
-let mapleader = " "
+nnoremap <SPACE> <Nop>
+let mapleader = "\<SPACE>"
 let maplocalleader = ","
 " Replace , with \ for back searching
 " Unnecessary with sneak
 "nnoremap \ ,
+
+" Make n always search forward
+nnoremap <expr> n 'Nn'[v:searchforward]
+nnoremap <expr> N 'nN'[v:searchforward]
 
 " For sneak, use \
 nmap \ <Plug>SneakPrevious
@@ -273,22 +282,6 @@ let g:sneak#use_ic_scs = 0
 " For Easymotion
 " nmap <SPACE> <leader><leader>s
 " vmap <SPACE> <leader><leader>s
-
-" DragVisuals config
-function! Drag(dir)
-  " For this script, put " back to what it does
-  nnoremap " "
-  execute DVB_Drag(a:dir)
-  " execute "normal "."gv".cmd
-  nnoremap " '
-endfunction
-vmap H :<C-U>call Drag("left")<CR>
-vmap J :<C-U>call Drag("down")<CR>
-vmap K :<C-U>call Drag("up")<CR>
-vmap L :<C-U>call Drag("right")<CR>
-vmap <expr> D DVB_Duplicate()
-" Remove any introduced trailing whitespace after moving...
-let g:DVB_TrimWS = 1
 
 " Before we remap, we need to call yankstack setup
 " call yankstack#setup()
@@ -313,12 +306,6 @@ nnoremap <silent> k :<C-U>call JkJumps('k')<CR>
 nnoremap gj j
 nnoremap gk k
 
-" Swap " and ' for easy access to register
-nnoremap " '
-nnoremap ' "
-vnoremap " '
-vnoremap ' "
-
 " Make entering a : take away relative numbering
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
@@ -337,7 +324,6 @@ tnoremap <C-l> <C-\><C-n><C-w>l
 " clear highlights
 nnoremap <silent> <leader>n :silent :nohlsearch<CR>
 
-nnoremap <Leader>j :LustyJuggler<CR>
 nnoremap <silent> <F4> :NERDTree<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
@@ -360,15 +346,29 @@ let g:quickfix_is_open = 0
 nnoremap <Leader>r :GundoToggle<CR>
 
 " Map Unite into some good keybindings
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <silent> <Leader>uu :<C-u>Unite
-    \ -start-insert buffer file_rec file_mru<CR>
+    \ -start-insert file_mru buffer file_rec/async<CR>
+" nnoremap <silent> <C-p> :<C-u>Unite
+"    \ -start-insert buffer file_rec/async file_mru<CR>
 nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
 nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
 nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
+nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
+if executable('ag')
+  let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
+endif
 
 " Map easyalign to visual mode's enter
 vnoremap <silent> <CR> :EasyAlign<CR>
 vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
+
+nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
+nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
+nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
 
 " Make youcompleteme not complete in unite
 let g:ycm_filetype_blacklist = {
@@ -437,8 +437,6 @@ let g:space_no_search = 1
 " For Alternate extension. Allow switching between interface and source ocaml
 " files
 let g:alternateExtensions_ML="mli"
-let g:LustyJugglerSuppressRubyWarning=1  " Suppress Lusty Juggler's ruby messages
-let g:LustyJugglerDefaultMappings=0 " Don't use LJ's defaults
 
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
@@ -450,12 +448,10 @@ let g:haddock_browser_callformat = "%s %s"
 " Merlin
 let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare."/merlin/vim"
+let g:merlin_split_method='never'
 
-" Make merlin use neocomplcache (omni-complete)
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+highlight EnclosingExpr ctermbg=Red
+
 
 " Make merlin use deoplete (omni-complete)
 if !exists('g:deoplete#omni_patterns')
@@ -468,11 +464,21 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
 
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+
 " Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
 let g:deocomplete#enable_at_startup = 1
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Get rid of mapping of signature so 0 is fast
+if mapcheck("0m?", "n")
+  nunmap 0m?
+endif
 
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
@@ -492,6 +498,7 @@ let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 " CtrlP extensions
 let g:ctrlp_extensions = ['tag', 'buffertag']
 let g:ctrlp_working_path_mode = 'wra'
+let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
 
 " Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
