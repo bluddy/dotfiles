@@ -1,7 +1,16 @@
 set nocompatible
 set hidden          " Allow buffers to go into the background
 
-call plug#begin('~/.nvim/plugged')
+fun! SetupPlug()
+  let root_dir = expand('$HOME', 1) . '/.vim'
+  if !filereadable(root_dir . '/autoload/plug.vim')
+    execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  endif
+endfun
+
+call SetupPlug()
+
+call plug#begin('~/.vim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
@@ -56,34 +65,13 @@ Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rc
 Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
 Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
+Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim'    " Completion
 
 call plug#end()
 
-
-" --------- End VAM ----------------
-" -------- Qargs code
-" from here: http://stackoverflow.com/questions/5686206/search-replace-using-quickfix-list-in-vim/5686810#5686810
-command! -nargs=0 -bar Qargs execute 'args' QuickfixFilenames()
-command! -nargs=1 -complete=command -bang Qargdo exe 'args '.QuickfixFilenames() | argdo<bang> <args>
-
-function! QuickfixFilenames()
-" Building a hash ensures we get each buffer only once
-  let buffer_numbers = {}
-  for quickfix_item in getqflist()
-    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
-  endfor
-  return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
-endfunction
-
-"
-" --------- End code
-
 " For keeping info between sessions
 set viminfo='500,f1,<500,:500,@500,/500
-
-" For remaining plugins (e.g. k3)
-"execute pathogen#infect()
 
 set nocompatible " vim rather than vi settings
 
@@ -98,13 +86,8 @@ set background=light
 " allow backspacing over everything
 set backspace=indent,eol,start
 
-" 4 space indent
 set shiftwidth=2
-
-" 4 stops
 set tabstop=2
-set softtabstop=2
-
 set expandtab
 
 set autoindent
@@ -116,17 +99,14 @@ set nowritebackup
 " 50 lines of command line history
 set history=100
 
-set gdefault                            " regex defaults to g
-set hlsearch                            " Highlight searched things
-set incsearch                           " incremental search
+set gdefault   " regex defaults to g
+set hlsearch   " Highlight searched things
+set incsearch  " incremental search
 
 " Set ignorecase on
 set ignorecase
 set smartcase
 
-" Syntax highlighting
-syntax on
-filetype plugin indent on
 set mouse=a
 
 set cursorline
@@ -151,6 +131,7 @@ set wrap
 
 " Command completion more useful
 set wildmenu " Show many options
+set wildmode=longest:full,full  " Complete up to point of ambiguity
 
 " Show window title
 set title
@@ -177,7 +158,6 @@ set lazyredraw
 set matchpairs+=<:>
 
 highlight DiffText ctermbg=LightBlue
-highlight EnclosingExpression ctermbg=Red
 highlight airline_x_to_airline_y_inactive ctermfg=LightGreen
 
 " Replace Wq with wq etc
@@ -191,43 +171,45 @@ if has("user_commands")
     command! -bang Q q<bang>
     command! -bang QA qa<bang>
     command! -bang Qa qa<bang>
+    command! RemoveTrailing call RemoveTrailing()
 endif
-
 
 " Grep sometimes doesn't display a filename
 set grepprg=grep\ -nH\ $*
-
-" Move all swap files to one directory
-set dir=~/temp/swp
 
 " Sessions: don't save some things
 set ssop-=options
 set ssop-=folds
 
+" Tags should search from current file upwards
+" ; indicates searching up, ./ indicates current file
+set tags=./tags;
+
 if has("autocmd")
   augroup languages
     autocmd!
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
-          \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-          \ shiftwidth=2 smarttab shiftround nojoinspaces
-          \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
-          \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
+        \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
-          \ shiftwidth=4 smarttab shiftround nojoinspaces
+        \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
-	autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
+        autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
     " Add the tex dictionary
     autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
-  " augroup fugitive
+  augroup fugitive
     " autocmd!
         " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-        " autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+        autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
         " Don't flood open buffers with fugitive files
-        " autocmd BufReadPost fugitive://* set bufhidden=delete
-  " augroup END
+        autocmd BufReadPost fugitive://* set bufhidden=delete
+  augroup END
   augroup highlight
     autocmd!
         " Remove search highlighting for insert mode
@@ -245,51 +227,34 @@ if has("autocmd")
     autocmd CursorMoved * call NumberIfPresent('r')
   augroup END
   " Settings for unite
-  augroup unite_custom
+  augroup UniteInit
     autocmd FileType unite call s:unite_my_settings()
     function! s:unite_my_settings()"{{{
-        nmap <buffer> <ESC> <Plug>(unite_exit)
-        imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-        imap <buffer> <C-j> <Plug>(unite_select_next_line)
-        imap <buffer> <C-k> <Plug>(unite_select_previous_line)
+        nnoremap <buffer> <ESC> <Plug>(unite_exit)
+        inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+        inoremap <buffer> <C-j> <Plug>(unite_select_next_line)
+        inoremap <buffer> <C-k> <Plug>(unite_select_previous_line)
     endfunction"}}}
+  augroup END
+  augroup PostPlugins
+    autocmd VimEnter *
+        \  if exists(":Unite")
+        \|     call unite#filters#matcher_default#use(['matcher_fuzzy'])
+        \| endif
+        \| highlight EnclosingExpr ctermbg=Red
   augroup END
 endif
 
-" Remaps ------------------------------------
+" ----------------- Remaps ---------------------
 "
 " Better leader
 nnoremap <SPACE> <Nop>
 let mapleader = "\<SPACE>"
 let maplocalleader = ","
-" Replace , with \ for back searching
-" Unnecessary with sneak
-"nnoremap \ ,
 
 " Make n always search forward
 nnoremap <expr> n 'Nn'[v:searchforward]
 nnoremap <expr> N 'nN'[v:searchforward]
-
-" For sneak, use \
-nmap \ <Plug>SneakPrevious
-" For some reason, sneak doesn't map this
-nmap S <Plug>Sneak_S
-nmap s <Plug>Sneak_s
-let g:sneak#streak = 1
-" Ignorecase
-let g:sneak#use_ic_scs = 0
-
-" For Easymotion
-" nmap <SPACE> <leader><leader>s
-" vmap <SPACE> <leader><leader>s
-
-" Before we remap, we need to call yankstack setup
-" call yankstack#setup()
-" nmap <Esc>p <Plug>yankstack_substitute_older_paste
-" nmap <Esc>P <Plug>yankstack_substitute_newer_paste
-
-" Map Howdoi
-nmap <Esc>h <Plug>Howdoi
 
 " Map jk to esc
 inoremap jk <Esc>
@@ -309,23 +274,12 @@ nnoremap gk k
 " Make entering a : take away relative numbering
 nnoremap : :<C-U>call NumberIfPresent('n')<CR>:
 
-" Make moving around windows easier
-" Turn off stupid bash support
-let g:BASH_Ctrl_j = 'off'
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-tnoremap <C-h> <C-\><C-n><C-w>h
-tnoremap <C-j> <C-\><C-n><C-w>j
-tnoremap <C-k> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
-
 " clear highlights
 nnoremap <silent> <leader>n :silent :nohlsearch<CR>
 
-nnoremap <silent> <F4> :NERDTree<CR>
-nnoremap <silent> <F9> :TagbarToggle<CR>
+" Make moving around windows easier
+" Turn off stupid bash support
+let g:BASH_Ctrl_j = 'off'
 
 " Allow C-p and C-n to filter command line
 cnoremap <C-p> <Up>
@@ -335,45 +289,9 @@ cnoremap <C-n> <Down>
 nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
-" Allow easy omnicompletion
-" inoremap <C-j> <C-x><C-o>
-
-" QuickFix toggle {{{
+" QuickFix toggle
 nnoremap <silent> <leader>q :call QuickFixToggle()<cr>
 let g:quickfix_is_open = 0
-
-" Gundo.vim {{{2
-nnoremap <Leader>r :GundoToggle<CR>
-
-" Map Unite into some good keybindings
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <silent> <Leader>uu :<C-u>Unite
-    \ -start-insert file_mru buffer file_rec/async<CR>
-" nnoremap <silent> <C-p> :<C-u>Unite
-"    \ -start-insert buffer file_rec/async file_mru<CR>
-nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
-nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
-nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
-nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
-nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
-nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
-nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
-if executable('ag')
-  let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
-endif
-
-" Map easyalign to visual mode's enter
-vnoremap <silent> <CR> :EasyAlign<CR>
-vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
-
-nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
-nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
-nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
-
-" Make youcompleteme not complete in unite
-let g:ycm_filetype_blacklist = {
-    \ 'unite' : 1,
-    \}
 
 " toggle quickfix window
 function! QuickFixToggle()
@@ -427,70 +345,81 @@ function! RemoveTrailing()
   %s/\s\+$//e
 endfunction
 
-" Variable settings for plugins --------------
-
-" Space.vim {{{2
-" Makes space awesome in normal mode
-let g:space_disable_select_mode=1
-let g:space_no_search = 1
-
-" For Alternate extension. Allow switching between interface and source ocaml
-" files
-let g:alternateExtensions_ML="mli"
-
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
 
-" Configure browser for haskell_doc.vim -- warning: only for mac!!!
-let g:haddock_browser = "open"
-let g:haddock_browser_callformat = "%s %s"
+" ----------- Variable settings for plugins --------------
 
-" Merlin
-let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
-execute "set rtp+=" . g:opamshare."/merlin/vim"
-let g:merlin_split_method='never'
+" Gundo.vim
+  nnoremap <Leader>r :GundoToggle<CR>
 
-highlight EnclosingExpr ctermbg=Red
+" Map easyalign to visual mode's enter
+  vnoremap <silent> <CR> :EasyAlign<CR>
+  vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
 
+  " Fugitive shortcuts
+  nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
+  nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
+  nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
 
-" Make merlin use deoplete (omni-complete)
+" Map Unite into some good keybindings
+  nnoremap <silent> <Leader>uu :<C-u>Unite
+        \  -start-insert file_mru buffer file_rec/async<CR>
+  nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+  nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
+  nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
+  nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+  nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
+  nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+  nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
+  if executable('ag')
+    let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
+  endif
+  " Make youcompleteme not complete in unite
+  let g:ycm_filetype_blacklist = {
+      \ 'unite' : 1,
+      \}
+
+  " For sneak, use \
+  nmap \ <Plug>SneakPrevious
+  " For some reason, sneak doesn't map this
+  nmap S <Plug>Sneak_S
+  nmap s <Plug>Sneak_s
+  let g:sneak#streak = 1
+  " Ignorecase
+  let g:sneak#use_ic_scs = 0
+
+" Merlin from opam
+if executable('opam')
+  let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
+  if isdirectory(g:opamshare."/merlin/vim")
+    execute "set rtp+=" . g:opamshare."/merlin/vim"
+    let g:merlin_split_method='never'
+  endif
+endif
+
+" Deoplete
 if !exists('g:deoplete#omni_patterns')
-  let g:deoplete#omni_patterns = {}
+  let g:deoplete#omni#input_patterns = {}
 endif
-let g:deoplete#omni_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+" Python regex
+let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\h\w+|\w+#\w*'
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><C-g>     deoplete#undo_completion()
 
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-
-" Use neocomplete.
-let g:deocomplete#enable_at_startup = 1
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Get rid of mapping of signature so 0 is fast
 if mapcheck("0m?", "n")
   nunmap 0m?
 endif
 
+" Syntastic
 let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
-" let g:syntastic_cpp_compiler = 'clang++'
-" let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
-" let g:syntastic_cpp_check_header = 1
-
-" Easymotion remap to s. This conflicts with surround for delete, yank etc, but that's ok.
-"let g:EasyMotion_leader_key = 's'
-
-" Make supertab use context to determine what to fill in
-let g:SuperTabDefaultCompletionType = "context"
+let g:syntastic_cpp_compiler = 'gcc'
+let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wextra -pedantic'
+let g:syntastic_cpp_check_header = 1
 
 " Startify bookmarks
 let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
@@ -508,8 +437,22 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 " Make vimwiki use Dropbox
 let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
 
-" NerdTreeIgnore
+" NERDTree
 let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
                   \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
-                  \, '\.pyc$[[file]]'
+                  \, '\.pyc$[[file]]', '\.a$[[file]]'
                   \]
+
+" EasyAlign
+"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+nmap <Leader>a <Plug>(EasyAlign)
+
+" Make vimfiler the default file explorer
+let g:vimfiler_as_default_explorer = 1
+
+" VimShell: Use current directory as vimshell prompt.
+let g:vimshell_prompt_expr =
+\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
+let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '

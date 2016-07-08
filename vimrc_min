@@ -221,7 +221,9 @@ if has("autocmd")
   augroup END
   augroup PostPlugins
     autocmd VimEnter *
-        \  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+        \  if exists(":Unite")
+        \|     call unite#filters#matcher_default#use(['matcher_fuzzy'])
+        \| endif
         \| highlight EnclosingExpr ctermbg=Red
   augroup END
 endif
