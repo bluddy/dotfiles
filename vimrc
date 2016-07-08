@@ -240,6 +240,11 @@ if has("autocmd")
         inoremap <buffer> <C-k> <Plug>(unite_select_previous_line)
     endfunction"}}}
   augroup END
+  augroup PostPlugins
+    autocmd VimEnter *
+        \  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+        \| highlight EnclosingExpr ctermbg=Red
+  augroup END
 endif
 
 " ----------------- Remaps ---------------------
@@ -348,45 +353,35 @@ let g:tex_flavor='latex' " Get vim to label the file properly
 " ----------- Variable settings for plugins --------------
 
 " Gundo.vim
-if exists(":GundoToggle")
   nnoremap <Leader>r :GundoToggle<CR>
-endif
 
 " Map easyalign to visual mode's enter
-if exists(":EasyAlign")
   vnoremap <silent> <CR> :EasyAlign<CR>
   vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
-endif
 
-if exists(":Gstatus")
   " Fugitive shortcuts
   nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
   nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
   nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
-endif
 
 " Map Unite into some good keybindings
-if exists(":Unite")
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    nnoremap <silent> <Leader>uu :<C-u>Unite
-          \  -start-insert file_mru buffer file_rec/async<CR>
-    nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
-    nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
-    nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
-    nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
-    nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
-    nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
-    nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
-    if executable('ag')
-      let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
-    endif
-    " Make youcompleteme not complete in unite
-    let g:ycm_filetype_blacklist = {
-        \ 'unite' : 1,
-        \}
-endif
+  nnoremap <silent> <Leader>uu :<C-u>Unite
+        \  -start-insert file_mru buffer file_rec/async<CR>
+  nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+  nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
+  nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
+  nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+  nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
+  nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+  nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
+  if executable('ag')
+    let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
+  endif
+  " Make youcompleteme not complete in unite
+  let g:ycm_filetype_blacklist = {
+      \ 'unite' : 1,
+      \}
 
-if exists("*sneak#cancel")
   " For sneak, use \
   nmap \ <Plug>SneakPrevious
   " For some reason, sneak doesn't map this
@@ -395,7 +390,6 @@ if exists("*sneak#cancel")
   let g:sneak#streak = 1
   " Ignorecase
   let g:sneak#use_ic_scs = 0
-endif
 
 " Merlin from opam
 if executable('opam')
@@ -403,83 +397,68 @@ if executable('opam')
   if isdirectory(g:opamshare."/merlin/vim")
     execute "set rtp+=" . g:opamshare."/merlin/vim"
     let g:merlin_split_method='never'
-    highlight EnclosingExpr ctermbg=Red
   endif
 endif
 
-if exists(":NeoCompleteEnable")
-  if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-  endif
-  let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
-  let g:monster#completion#rcodetools#backend = "async_rct_complete"
-  if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-  endif
-  let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-  " Use neocomplete.
-  let g:neocomplete#enable_at_startup = 1
-  inoremap <expr><C-g>     neocomplete#undo_completion()
-  inoremap <expr><C-l>     neocomplete#complete_common_string()
+" Neocomplete
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
 endif
+let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Get rid of mapping of signature so 0 is fast
 if mapcheck("0m?", "n")
   nunmap 0m?
 endif
 
-if exists(":SyntasticCheck")
-  let g:syntastic_ocaml_checkers=['merlin']
-  let g:syntastic_python_checkers=['flake8']
-  let g:syntastic_cpp_compiler = 'gcc'
-  let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wextra -pedantic'
-  let g:syntastic_cpp_check_header = 1
-endif
+" Syntastic
+let g:syntastic_ocaml_checkers=['merlin']
+let g:syntastic_python_checkers=['flake8']
+let g:syntastic_cpp_compiler = 'gcc'
+let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wextra -pedantic'
+let g:syntastic_cpp_check_header = 1
 
-if exists(":Startify")
-  " Startify bookmarks
-  let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
-endif
+" Startify bookmarks
+let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 
-if exists(":CtrlP")
-  " CtrlP extensions
-  let g:ctrlp_extensions = ['tag', 'buffertag']
-  let g:ctrlp_working_path_mode = 'wra'
-  let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
-endif
+" CtrlP extensions
+let g:ctrlp_extensions = ['tag', 'buffertag']
+let g:ctrlp_working_path_mode = 'wra'
+let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
 
 " Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
-if exists(":VimwikiIndex")
-  " Make vimwiki use Dropbox
-  let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
-endif
+" Make vimwiki use Dropbox
+let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
 
-if exists(":NERDTree")
-  let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
-                    \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
-                    \, '\.pyc$[[file]]', '\.a$[[file]]'
-                    \]
-endif
+" NERDTree
+let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
+                  \, '\.cmx$[[file]]', '\.cmt$[[file]]', '\.cmti$[[file]]'
+                  \, '\.pyc$[[file]]', '\.a$[[file]]'
+                  \]
 
-if exists(":EasyAlign")
-  "" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-  vmap <Enter> <Plug>(EasyAlign)
-  " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
-  nmap <Leader>a <Plug>(EasyAlign)
-endif
+" EasyAlign
+"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+nmap <Leader>a <Plug>(EasyAlign)
 
-if exists(":VimFiler")
-  " Make vimfiler the default file explorer
-  let g:vimfiler_as_default_explorer = 1
-endif
+" Make vimfiler the default file explorer
+let g:vimfiler_as_default_explorer = 1
 
-if exists(":VimShell")
-  " Use current directory as vimshell prompt.
-  let g:vimshell_prompt_expr =
-  \ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
-  let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
-endif
+" VimShell: Use current directory as vimshell prompt.
+let g:vimshell_prompt_expr =
+\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
+let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
