@@ -1,4 +1,3 @@
-set nocompatible
 set hidden          " Allow buffers to go into the background
 
 fun! SetupPlug()
@@ -46,7 +45,7 @@ Plug 'wellle/targets.vim'      " More text objects
 Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'tomtom/tcomment_vim'      " Automatic commenting
 Plug 'vimwiki/vimwiki'         " Wiki in vim
-Plug 'airblade/vim-gitgutter'  " Show git changes in side
+Plug 'mhinz/vim-signify'  " Show git changes in side
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'   " Show register contents
@@ -67,6 +66,9 @@ Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim'    " Completion
+Plug 'metakirby5/codi.vim'     " Coding scratchpad
+"Plug 'machakann/vim-highlightedyank' " highlight yank
+Plug 'bfredl/nvim-miniyank' " yank ring
 
 call plug#end()
 
@@ -83,31 +85,19 @@ let g:solarized_visibility="high"
 let g:solarized_contrast="high"
 set background=light
 
-" allow backspacing over everything
-set backspace=indent,eol,start
-
 set shiftwidth=2
 set tabstop=2
 set expandtab
-
-set autoindent
 
 " Don't save a backup
 set nobackup
 set nowritebackup
 
-" 50 lines of command line history
-set history=100
-
 set gdefault   " regex defaults to g
-set hlsearch   " Highlight searched things
-set incsearch  " incremental search
 
 " Set ignorecase on
 set ignorecase
 set smartcase
-
-set mouse=a
 
 set cursorline
 set ruler
@@ -130,7 +120,6 @@ set textwidth=0 wrapmargin=0
 set wrap
 
 " Command completion more useful
-set wildmenu " Show many options
 set wildmode=longest:full,full  " Complete up to point of ambiguity
 
 " Show window title
@@ -138,7 +127,6 @@ set title
 
 set visualbell          " don't beep
 set noerrorbells        " don't beep
-
 
 set virtualedit=block  " Make block editing better
 
@@ -181,22 +169,20 @@ set grepprg=grep\ -nH\ $*
 set ssop-=options
 set ssop-=folds
 
-" Tags should search from current file upwards
-" ; indicates searching up, ./ indicates current file
-set tags=./tags;
+set inccommand=split
 
 if has("autocmd")
   augroup languages
     autocmd!
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ shiftwidth=2 shiftround nojoinspaces
         \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
+        \ shiftwidth=2 shiftround nojoinspaces
         \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
         \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
-        \ shiftwidth=4 smarttab shiftround nojoinspaces
+        \ shiftwidth=4 shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
         autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
@@ -353,10 +339,6 @@ let g:tex_flavor='latex' " Get vim to label the file properly
 " Gundo.vim
   nnoremap <Leader>r :GundoToggle<CR>
 
-" Map easyalign to visual mode's enter
-  vnoremap <silent> <CR> :EasyAlign<CR>
-  vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
-
   " Fugitive shortcuts
   nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
   nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
@@ -405,6 +387,8 @@ endif
 " Python regex
 let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\h\w+|\w+#\w*'
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#max_menu_width = 200
+let g:deoplete#max_abbr_width = 200
 inoremap <expr><C-g>     deoplete#undo_completion()
 
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -443,12 +427,6 @@ let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
                   \, '\.pyc$[[file]]', '\.a$[[file]]'
                   \]
 
-" EasyAlign
-"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
-nmap <Leader>a <Plug>(EasyAlign)
-
 " Make vimfiler the default file explorer
 let g:vimfiler_as_default_explorer = 1
 
@@ -456,3 +434,10 @@ let g:vimfiler_as_default_explorer = 1
 let g:vimshell_prompt_expr =
 \ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
 let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
+
+" Miniyank (kill ring) requires XDG_RUNTIME_DIR:
+if !empty($XDG_RUNTIME_DIR)
+  map p <Plug>(miniyank-autoput)
+  map P <Plug>(miniyank-autoPut)
+  nmap <leader>n <Plug>(miniyank-cycle)
+endif
