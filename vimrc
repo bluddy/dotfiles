@@ -54,7 +54,7 @@ Plug 'junegunn/vim-peekaboo'   " Show register contents
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'coderifous/textobj-word-column.vim' " Column text object
-Plug 'Shougo/denite.nvim'        " Menu interface
+Plug 'Shougo/unite.nvim'        " Menu interface
 Plug 'Shougo/vinarise.vim'       " 
 Plug 'Shougo/vimfiler.vim'       " 
 Plug 'Shougo/neocomplete.vim'    " completion engine
@@ -228,20 +228,20 @@ if has("autocmd")
     autocmd FocusLost * call NumberIfPresent('n')
     autocmd CursorMoved * call NumberIfPresent('r')
   augroup END
-  " Settings for denite
-  augroup DeniteInit
-    autocmd FileType denite call s:denite_my_settings()
-    function! s:denite_my_settings()"{{{
-        nnoremap <buffer> <ESC> <Plug>(denite_exit)
-        inoremap <buffer> <C-w> <Plug>(denite_delete_backward_path)
-        inoremap <buffer> <C-j> <Plug>(denite_select_next_line)
-        inoremap <buffer> <C-k> <Plug>(denite_select_previous_line)
+  " Settings for unite
+  augroup UniteInit
+    autocmd FileType unite call s:unite_my_settings()
+    function! s:unite_my_settings()"{{{
+        nnoremap <buffer> <ESC> <Plug>(unite_exit)
+        inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+        inoremap <buffer> <C-j> <Plug>(unite_select_next_line)
+        inoremap <buffer> <C-k> <Plug>(unite_select_previous_line)
     endfunction"}}}
   augroup END
   augroup PostPlugins
     autocmd VimEnter *
-        \  if exists(":Denite")
-        \|     call denite#filters#matcher_default#use(['matcher_fuzzy'])
+        \  if exists(":Unite")
+        \|     call unite#filters#matcher_default#use(['matcher_fuzzy'])
         \| endif
         \| highlight EnclosingExpr ctermbg=Red
   augroup END
@@ -364,22 +364,22 @@ let g:tex_flavor='latex' " Get vim to label the file properly
   nnoremap <silent> <Leader>gd :<C-U>Gdiff<CR>
   nnoremap <silent> <Leader>gp :<C-U>Gpush<CR>
 
-" Map Denite into some good keybindings
-  nnoremap <silent> <Leader>uu :<C-u>Denite
+" Map Unite into some good keybindings
+  nnoremap <silent> <Leader>uu :<C-u>Unite
         \  -start-insert file_mru buffer file_rec/async<CR>
-  nnoremap <silent> <Leader>um :<C-u>Denite mapping<CR>
-  nnoremap <silent> <Leader>ur :<C-u>Denite file_mru<CR>
-  nnoremap <silent> <Leader>uj :<C-u>Denite -quick-match buffer<CR>
-  nnoremap <silent> <Leader>up :<C-u>Denite process<CR>
-  nnoremap <silent> <Leader>ut :<C-u>Denite tag<CR>
-  nnoremap <silent> <Leader>ub :<C-u>Denite buffer<CR>
-  nnoremap <silent> <Leader>ul :<C-u>Denite line<CR>
+  nnoremap <silent> <Leader>um :<C-u>Unite mapping<CR>
+  nnoremap <silent> <Leader>ur :<C-u>Unite file_mru<CR>
+  nnoremap <silent> <Leader>uj :<C-u>Unite -quick-match buffer<CR>
+  nnoremap <silent> <Leader>up :<C-u>Unite process<CR>
+  nnoremap <silent> <Leader>ut :<C-u>Unite tag<CR>
+  nnoremap <silent> <Leader>ub :<C-u>Unite buffer<CR>
+  nnoremap <silent> <Leader>ul :<C-u>Unite line<CR>
   if executable('ag')
-    let g:denite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
+    let g:unite_source_rec_async_command='ag --nocolor --nogroup --hidden -g ""'
   endif
-  " Make youcompleteme not complete in denite
+  " Make youcompleteme not complete in unite
   let g:ycm_filetype_blacklist = {
-      \ 'denite' : 1,
+      \ 'unite' : 1,
       \}
 
   " For sneak, use \
