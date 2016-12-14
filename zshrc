@@ -8,7 +8,7 @@ export HELPDIR=/usr/local/share/zsh/help
 export FPATH=/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions:$FPATH
 
 # requires antigen be installed
-[ -d .antigen ] && source .antigen/antigen.zsh
+[ -d "${HOME}/.zgen" ] && source "${HOME}/.zgen/zgen.zsh"
 
 # Locale
 #
@@ -16,29 +16,31 @@ LC_CTYPE=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 
 # pick from oh-my-zsh plugins
-if command_exists antigen ; then
-  antigen use oh-my-zsh
+if command_exists zgen && ! zgen saved; then
+  zgen oh-my-zsh
 
-  antigen bundle zsh-users/zsh-syntax-highlighting
-  antigen bundle zsh-users/zsh-history-substring-search
+  zgen load zsh-users/zsh-syntax-highlighting
+  zgen load zsh-users/zsh-history-substring-search
 
-  antigen bundle vi-mode
-  antigen bundle git
-  antigen bundle cabal
-  antigen bundle mercurial
-  antigen bundle pip
-  antigen bundle brew
-  antigen bundle fasd
-  antigen bundle python
-  antigen bundle ruby
-  antigen bundle scala
-  antigen bundle tmux
-  antigen bundle vagrant
-  antigen bundle emacs
+  zgen oh-my-zsh plugins/vi-mode
+  zgen oh-my-zsh plugins/git
+  zgen oh-my-zsh plugins/cabal
+  zgen oh-my-zsh plugins/mercurial
+  zgen oh-my-zsh plugins/pip
+  zgen oh-my-zsh plugins/brew
+  zgen oh-my-zsh plugins/fasd
+  zgen oh-my-zsh plugins/python
+  zgen oh-my-zsh plugins/ruby
+  zgen oh-my-zsh plugins/scala
+  zgen oh-my-zsh plugins/tmux
+  zgen oh-my-zsh plugins/vagrant
+  zgen oh-my-zsh plugins/emacs
 
-  antigen theme robbyrussell
+  zgen oh-my-zsh themes/robbyrussell
 
-  antigen apply
+  zgen save
+
+  ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)
 fi
 
 # for massive renaming
