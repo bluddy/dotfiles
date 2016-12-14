@@ -17,26 +17,21 @@ LC_ALL=en_US.UTF-8
 
 # pick from oh-my-zsh plugins
 if command_exists zgen && ! zgen saved; then
-  zgen oh-my-zsh
+  zgen prezto editor key-bindings 'vi'
+  zgen prezto prompt theme 'sorin'
 
-  zgen load zsh-users/zsh-syntax-highlighting
-  zgen load zsh-users/zsh-history-substring-search
-
-  zgen oh-my-zsh plugins/vi-mode
-  zgen oh-my-zsh plugins/git
-  zgen oh-my-zsh plugins/cabal
-  zgen oh-my-zsh plugins/mercurial
-  zgen oh-my-zsh plugins/pip
-  zgen oh-my-zsh plugins/brew
-  zgen oh-my-zsh plugins/fasd
-  zgen oh-my-zsh plugins/python
-  zgen oh-my-zsh plugins/ruby
-  zgen oh-my-zsh plugins/scala
-  zgen oh-my-zsh plugins/tmux
-  zgen oh-my-zsh plugins/vagrant
-  zgen oh-my-zsh plugins/emacs
-
-  zgen oh-my-zsh themes/robbyrussell
+  zgen prezto
+  zgen prezto environment
+  zgen prezto history
+  zgen prezto syntax-highlighting
+  zgen prezto history-substring-search
+  zgen prezto autosuggestions
+  zgen prezto utility
+  zgen prezto completion
+  zgen prezto archive
+  zgen prezto git
+  zgen prezto homebrew
+  zgen prezto prompt
 
   zgen save
 
