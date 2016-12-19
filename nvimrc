@@ -221,10 +221,10 @@ if has("autocmd")
         imap <buffer> <C-k> <Plug>(denite_select_previous_line)
     endfunction"}}}
   augroup END
+  " For OCaml
   augroup PostPlugins
     autocmd VimEnter *
-        " For OCaml
-        highlight EnclosingExpr ctermbg=Red
+        \ highlight EnclosingExpr ctermbg=Red
   augroup END
 endif
 
