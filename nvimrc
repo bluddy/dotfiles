@@ -56,18 +56,19 @@ Plug 'Shougo/denite.nvim'        " Menu interface
 "Plug 'tsukkee/denite-tag'       " Tags for Denite
 "Plug 'Shougo/neomru.vim'       " MRU for Denite
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
-Plug 'rking/ag.vim'            " Simple AG plugin (maybe best)
-Plug 'gabesoft/vim-ags'        " Advanced Silver Searcher plugin
-Plug 'dyng/ctrlsf.vim'         " Advanced ag/ack plugin ( choose 1)
+Plug 'mhinz/vim-grepper'       " Asynchronous search with ag etc
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
 Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
 Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim'    " Completion
+Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
+Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
+Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'bfredl/nvim-miniyank' " yank ring
-
+Plug 'tpope/vim-obsession'  " Auto vim session saving
 call plug#end()
 
 " For keeping info between sessions
@@ -222,10 +223,8 @@ if has("autocmd")
   augroup END
   augroup PostPlugins
     autocmd VimEnter *
-        \  if exists(":Denite")
-        \|     call denite#filters#matcher_default#use(['matcher_fuzzy'])
-        \| endif
-        \| highlight EnclosingExpr ctermbg=Red
+        " For OCaml
+        highlight EnclosingExpr ctermbg=Red
   augroup END
 endif
 
@@ -385,7 +384,7 @@ endif
 if !exists('g:deoplete#omni_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
-" Python regex
+" Deoplete options
 let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\h\w+|\w+#\w*'
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#max_menu_width = 200
@@ -442,3 +441,12 @@ if !empty($XDG_RUNTIME_DIR)
   map P <Plug>(miniyank-autoPut)
   nmap <leader>n <Plug>(miniyank-cycle)
 endif
+
+" Grepper
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
+nnoremap <leader>gg :<C-U>Grepper -tool git<CR>
+nnoremap <leader>ga :<C-U>Grepper -tool ag<CR>
+nnoremap <leader>gs :<C-U>Grepper -tool ag -side<CR>
+nnoremap <leader>* :<C-U>Grepper -tool ag -cword -noprompt<CR>
+

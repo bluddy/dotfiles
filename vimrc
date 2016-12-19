@@ -69,6 +69,7 @@ Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
+Plug 'tpopt/vim-obsession'     " Auto session saving
 
 call plug#end()
 

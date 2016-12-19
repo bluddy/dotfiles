@@ -25,7 +25,7 @@ if command_exists zgen && ! zgen saved; then
   zgen prezto history
   zgen prezto syntax-highlighting
   zgen prezto history-substring-search
-  zgen prezto autosuggestions
+  #zgen prezto autosuggestions
   zgen prezto utility
   zgen prezto completion
   zgen prezto archive
@@ -68,7 +68,7 @@ bindkey -M vicmd 'j' substring-down-local
 
 # User configuration
 if command_exists brew ; then
-  export MYBREW=/usr/local
+  export MYBREW=$(brew --prefix)
 
   # use brew vim as default editor
   export EDITOR=$MYBREW/bin/vim
