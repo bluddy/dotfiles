@@ -40,7 +40,6 @@ Plug 'justinmk/vim-sneak'      " Quick two-char searching; also replaces easymot
 Plug 'wellle/targets.vim'      " More text objects
 Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'airblade/vim-gitgutter'  " Show git changes in side
-Plug 'junegunn/vim-peekaboo'   " Show register contents
 Plug 'coderifous/textobj-word-column.vim' " Column text object
 Plug 'Shougo/unite.vim'        " Menu interface
 Plug 'tsukkee/unite-tag'       " Tags for Unite
@@ -171,20 +170,12 @@ set tags=./tags;
 if has("autocmd")
   augroup languages
     autocmd!
-    autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ omnifunc=necoghc#omnifunc
-    autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
-        \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
         \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
         autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
     " Add the tex dictionary
-    autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   augroup fugitive
     " autocmd!

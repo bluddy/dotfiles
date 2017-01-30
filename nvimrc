@@ -173,6 +173,9 @@ set inccommand=split
 if has("autocmd")
   augroup languages
     autocmd!
+    autocmd BufNewFile,BufRead *.eliom,*.eliomi set filetype=ocaml
+    autocmd BufNewFile,BufRead *.cppmd set filetype=markdown
+    autocmd FileType markdown nnoremap <buffer> <LocalLeader>p o<CR>\pause<CR><Esc>
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 shiftround nojoinspaces
         \ omnifunc=necoghc#omnifunc
