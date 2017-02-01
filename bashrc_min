@@ -21,3 +21,7 @@ export LSCOLORS=gxfxcxdxbxegedabagacad
 # Make command line history ignore some things, like starting with space and plain ls
 export HISTIGNORE="ls:[bf]g:exit:ll"
 export HISTCONTROL="erasedups:ignorespace"
+
+alias gc='gcc -Wall -Wextra -std=c99 -pedantic -Wconversion'
+alias gg='g++ -Wall -Wextra -std=c++11 -pedantic -Wconversion'
+
