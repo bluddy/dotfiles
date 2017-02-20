@@ -78,10 +78,10 @@ bindkey -M vicmd 'j' substring-down-local
 
 # User configuration
 
-if [[ $platform == 'linux' && -d "~/.linuxbrew" ]]; then
-  MYBREW="~/.linuxbrew"
+if [[ $platform == 'linux' ]] && [[ -d "~/.linuxbrew" ]]; then
+  export MYBREW="~/.linuxbrew"
 elif [[ $platform == 'osx' ]]; then
-  MYBREW='/usr/local'
+  export MYBREW='/usr/local'
 fi
 if [[ ! -z "$MYBREW" ]]; then
   # use brew vim as default editor
