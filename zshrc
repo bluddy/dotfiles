@@ -74,12 +74,12 @@ zle -N substring-down-local
 bindkey -M vicmd 'k' substring-up-local
 bindkey -M vicmd 'j' substring-down-local
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # User configuration
 
-if [[ $platform == 'linux' ]] && [[ -d "~/.linuxbrew" ]]; then
-  export MYBREW="~/.linuxbrew"
+if [[ $platform == 'linux' ]] && [[ -d "$HOME/.linuxbrew" ]]; then
+  export MYBREW="$HOME/.linuxbrew"
 elif [[ $platform == 'osx' ]]; then
   export MYBREW='/usr/local'
 fi
@@ -131,7 +131,7 @@ function opamsw {
 # Add texbin to path
 [ -d '/usr/texbin/' ] && export PATH="$PATH:/usr/texbin"
 # private homebrew github token
-[ -r ~/.notpublic ] && source ~/.notpublic
+[ -r "$HOME/.notpublic" ] && source "$HOME/.notpublic"
 
 # --- Temporary stuff ---
 
