@@ -2,6 +2,15 @@ command_exists () {
     type "$1" &> /dev/null ;
 }
 
+# get platform
+platform='unknown'
+unamestr=$(uname)
+if [[ "$unamestr" == 'Darwin' ]]; then
+  platform='osx'
+elif [[ "$unamestr" == 'Linux' ]]; then
+  platform='linux'
+fi
+
 # For homebrew
 autoload run-help
 export HELPDIR=/usr/local/share/zsh/help
@@ -23,14 +32,15 @@ if command_exists zgen && ! zgen saved; then
   zgen prezto
   zgen prezto environment
   zgen prezto history
-  zgen prezto syntax-highlighting
-  zgen prezto history-substring-search
-  #zgen prezto autosuggestions
   zgen prezto utility
   zgen prezto completion
   zgen prezto archive
   zgen prezto git
+  zgen prezto fasd
   zgen prezto homebrew
+  zgen prezto syntax-highlighting
+  zgen prezto history-substring-search
+  #zgen prezto autosuggestions
   zgen prezto prompt
 
   zgen save
@@ -67,9 +77,13 @@ bindkey -M vicmd 'j' substring-down-local
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # User configuration
-if command_exists brew ; then
-  export MYBREW=$(brew --prefix)
 
+if [[ $platform == 'linux' && -d "~/.linuxbrew" ]]; then
+  MYBREW="~/.linuxbrew"
+elif [[ $platform == 'osx' ]]; then
+  MYBREW='/usr/local'
+fi
+if [[ ! -z "$MYBREW" ]]; then
   # use brew vim as default editor
   export EDITOR=$MYBREW/bin/vim
 
@@ -107,6 +121,11 @@ if command_exists opam ; then
   eval `opam config env`
 fi
 
+# local opam switch (per terminal window)
+function opamsw {
+  eval $(opam config env --switch $1)
+}
+
 # Add cabal to path
 [ -d "$HOME/.cabal" ] && export PATH="$PATH:$HOME/.cabal/bin"
 # Add texbin to path
@@ -114,18 +133,19 @@ fi
 # private homebrew github token
 [ -r ~/.notpublic ] && source ~/.notpublic
 
+# --- Temporary stuff ---
+
 # readline is shadowed by BSD libedit. Have its place handy:
 export READLINE_LIB=$MYBREW/Cellar/readline/6.3.8/lib
 export READLINE_INCLUDE=$MYBREW/Cellar/readline/6.3.8/include
 # command line needed to install readline with cabal
 alias cabal_readline_add='cabal install readline --extra-include-dirs=$READLINE_INCLUDE --extra-lib-dirs=$READLINE_LIB --configure-option=--with-readline-includes=$READLINE_INCLUDE --configure-option=--with-readline-libraries=$READLINE_LIB'
 
-# --- Temporary stuff ---
-
 # command for GDK recognizing stuff
 alias gdk_pixbuf_cache='env GDK_PIXBUF_MODULEDIR=$MYBREW/lib/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache'
-alias opam_mult='eval `opam config env --switch=4.02.1+multicore`'
 export DOCKER_HOST=tcp://192.168.59.103:2375
+# tlmgr search for file
+alias stlmgr='tlmgr search --global --all'
 
 # for GO
 export GOPATH=$HOME/gocode
