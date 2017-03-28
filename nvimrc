@@ -69,12 +69,16 @@ Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'bfredl/nvim-miniyank' " yank ring
 Plug 'tpope/vim-obsession'  " Auto vim session saving
+Plug 'jgdavey/tslime.vim'       " Copy to tmux
+Plug 'hardenedapple/vsh'    " Modifiable shell windows
+Plug 'roxma/vim-tmux-clipboard' " Integrate vim and tmux clipboards
 call plug#end()
 
 " For keeping info between sessions
 set viminfo='500,f1,<500,:500,@500,/500
 
 set nocompatible " vim rather than vi settings
+set autoread " Update automatically on file change
 
 set t_Co=256
 
@@ -447,9 +451,15 @@ endif
 
 " Grepper
 nmap gs <plug>(GrepperOperator)
+
 xmap gs <plug>(GrepperOperator)
 nnoremap <leader>gg :<C-U>Grepper -tool git<CR>
 nnoremap <leader>ga :<C-U>Grepper -tool ag<CR>
 nnoremap <leader>gs :<C-U>Grepper -tool ag -side<CR>
 nnoremap <leader>* :<C-U>Grepper -tool ag -cword -noprompt<CR>
+
+" TSlime bindings
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+nmap <C-c><C-c> <Plug>NormalModeSendToTmux
+nmap <C-c>r <Plug>SetTmuxVars
 

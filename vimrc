@@ -70,6 +70,7 @@ Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'tpopt/vim-obsession'     " Auto session saving
+Plug 'jgdavey/tslime.vim'      " Copy to tmux
 
 call plug#end()
 
@@ -77,6 +78,7 @@ call plug#end()
 set viminfo='500,f1,<500,:500,@500,/500
 
 set nocompatible " vim rather than vi settings
+set autoread " Update automatically on file change
 
 set t_Co=256
 
@@ -463,3 +465,8 @@ let g:vimfiler_as_default_explorer = 1
 let g:vimshell_prompt_expr =
 \ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
 let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
+
+" TSlime bindings
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+nmap <C-c><C-c> <Plug>NormalModeSendToTmux
+nmap <C-c>r <Plug>SetTmuxVars
