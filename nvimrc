@@ -341,6 +341,16 @@ let g:tex_flavor='latex' " Get vim to label the file properly
 " Edit config quickly
 nnoremap <Leader>zz :e ~/.config/nvim/init.vim<CR>
 
+function! DiffToggle()
+  if &diff
+    diffoff
+  else
+    diffthis
+  endif
+endfunction
+
+nnoremap <silent> <Leader>df :<C-U>call DiffToggle()<CR>
+
 " ----------- Variable settings for plugins --------------
 
 " Gundo.vim
