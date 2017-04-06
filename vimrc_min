@@ -45,10 +45,12 @@ Plug 'Shougo/unite.vim'        " Menu interface
 Plug 'tsukkee/unite-tag'       " Tags for Unite
 Plug 'Shougo/neocomplete.vim'       " MRU for Unite
 Plug 'Shougo/vimproc.vim', { 'do': 'make' } " MRU for Unite
+Plug 'christoomey/vim-tmux-navigator' " Move around tmux
 Plug 'rking/ag.vim'            " Simple AG plugin (maybe best)
 Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
+Plug 'jgdavey/tslime.vim'      " Copy to tmux
 
 call plug#end()
 
@@ -56,6 +58,7 @@ call plug#end()
 set viminfo='500,f1,<500,:500,@500,/500
 
 set nocompatible " vim rather than vi settings
+set autoread " Update automatically on file change
 
 set t_Co=256
 
@@ -120,7 +123,6 @@ set title
 
 set visualbell          " don't beep
 set noerrorbells        " don't beep
-
 
 set virtualedit=block  " Make block editing better
 
@@ -322,14 +324,23 @@ endfunction
 " For latex
 let g:tex_flavor='latex' " Get vim to label the file properly
 
+" Edit config quickly
+nnoremap <Leader>zz :<C-U>e ~/.vimrc<CR>
+
+function! DiffToggle()
+  if &diff
+    diffoff
+  else
+    diffthis
+  endif
+endfunction
+
+nnoremap <silent> <Leader>df :<C-U>call DiffToggle()<CR>
+
 " ----------- Variable settings for plugins --------------
 
 " Gundo.vim
   nnoremap <Leader>r :GundoToggle<CR>
-
-" Map easyalign to visual mode's enter
-  vnoremap <silent> <CR> :EasyAlign<CR>
-  vnoremap <silent> <Leader><CR> :LiveEasyAlign<CR>
 
   " Fugitive shortcuts
   nnoremap <silent> <Leader>gs :<C-U>Gstatus<CR>
@@ -363,21 +374,10 @@ let g:tex_flavor='latex' " Get vim to label the file properly
   " Ignorecase
   let g:sneak#use_ic_scs = 0
 
-" Merlin from opam
-if executable('opam')
-  let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
-  if isdirectory(g:opamshare."/merlin/vim")
-    execute "set rtp+=" . g:opamshare."/merlin/vim"
-    let g:merlin_split_method='never'
-  endif
-endif
-
 " Neocomplete
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
-let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
-let g:monster#completion#rcodetools#backend = "async_rct_complete"
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
@@ -393,27 +393,16 @@ if mapcheck("0m?", "n")
 endif
 
 " Syntastic
-let g:syntastic_ocaml_checkers=['merlin']
 let g:syntastic_python_checkers=['flake8']
 let g:syntastic_cpp_compiler = 'gcc'
 let g:syntastic_cpp_compiler_options = '-std=c++11 -Wall -Wextra -pedantic'
 let g:syntastic_cpp_check_header = 1
-
-" Startify bookmarks
-let g:startify_bookmarks = ['~/.vimrc', '~/.bashrc']
 
 " CtrlP extensions
 let g:ctrlp_extensions = ['tag', 'buffertag']
 let g:ctrlp_working_path_mode = 'wra'
 let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
 
-" Change ultisnip expand triggers
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-" Make vimwiki use Dropbox
-let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
 
 " NERDTree
 let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
@@ -421,16 +410,7 @@ let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
                   \, '\.pyc$[[file]]', '\.a$[[file]]'
                   \]
 
-" EasyAlign
-"" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
-nmap <Leader>a <Plug>(EasyAlign)
-
-" Make vimfiler the default file explorer
-let g:vimfiler_as_default_explorer = 1
-
-" VimShell: Use current directory as vimshell prompt.
-let g:vimshell_prompt_expr =
-\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
-let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
+" TSlime bindings
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+nmap <C-c><C-c> <Plug>NormalModeSendToTmux
+nmap <C-c>r <Plug>SetTmuxVars

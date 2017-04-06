@@ -339,7 +339,7 @@ endfunction
 let g:tex_flavor='latex' " Get vim to label the file properly
 
 " Edit config quickly
-nnoremap <Leader>zz :e ~/.config/nvim/init.vim<CR>
+nnoremap <Leader>zz :<C-U>e ~/.config/nvim/init.vim<CR>
 
 function! DiffToggle()
   if &diff
