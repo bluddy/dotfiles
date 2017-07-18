@@ -1,3 +1,4 @@
+set nocompatible | filetype indent plugin on | syn on
 set hidden          " Allow buffers to go into the background
 
 fun! SetupPlug()
@@ -24,7 +25,7 @@ Plug 'tpope/vim-eunuch'    " Unix commands
 Plug 'tpope/vim-fugitive'       " Git helper
 Plug 'int3/vim-extradite'       " Git: view commit tree
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic' " Syntax checking
+"Plug 'scrooloose/syntastic' " Syntax checking
 Plug 'godlygeek/tabular' " Aligning tables
 Plug 'kshenoy/vim-signature'   " Display marks
 Plug 'bling/vim-airline'       " Status line
@@ -58,7 +59,7 @@ Plug 'Shougo/denite.nvim'        " Menu interface
 Plug 'christoomey/vim-tmux-navigator' " Move around tmux
 Plug 'mhinz/vim-grepper'       " Asynchronous search with ag etc
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
-Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
+"Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
 Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
@@ -72,6 +73,10 @@ Plug 'tpope/vim-obsession'  " Auto vim session saving
 Plug 'jgdavey/tslime.vim'       " Copy to tmux
 Plug 'hardenedapple/vsh'    " Modifiable shell windows
 Plug 'roxma/vim-tmux-clipboard' " Integrate vim and tmux clipboards
+Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
+Plug 'w0rp/ale' " Asynchronous lint engine
+
 call plug#end()
 
 " For keeping info between sessions
@@ -83,10 +88,12 @@ set autoread " Update automatically on file change
 set t_Co=256
 
 "colorscheme solarized
-let g:solarized_termcolors=256
-let g:solarized_visibility="high"
-let g:solarized_contrast="high"
+"let g:solarized_termcolors=256
+"let g:solarized_visibility="high"
+"let g:solarized_contrast="high"
+set termguicolors
 set background=light
+colorscheme solarized
 
 set shiftwidth=2
 set tabstop=2
@@ -123,6 +130,7 @@ set textwidth=0 wrapmargin=0
 set wrap
 
 " Command completion more useful
+set wildmenu " Show many options
 set wildmode=longest:full,full  " Complete up to point of ambiguity
 
 " Show window title
@@ -181,14 +189,14 @@ if has("autocmd")
     autocmd BufNewFile,BufRead *.cppmd set filetype=markdown
     autocmd FileType markdown nnoremap <buffer> <LocalLeader>p o<CR>\pause<CR><Esc>
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 shiftround nojoinspaces
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
         \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
-        \ shiftwidth=2 shiftround nojoinspaces
+        \ shiftwidth=2 smarttab shiftround nojoinspaces
         \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
         \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
-        \ shiftwidth=4 shiftround nojoinspaces
+        \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
     autocmd FileType qf wincmd J
         autocmd BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl setf glsl
@@ -402,7 +410,7 @@ if !exists('g:deoplete#omni_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
 " Deoplete options
-let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\h\w+|\w+#\w*'
+let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200

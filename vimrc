@@ -420,12 +420,12 @@ endif
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
-let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\h\w*|#'
+let g:neocomplete#force_omni_input_patterns.ocaml = '[^. *\t]\.\w*\|\s\w*|#'
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\s\w*::'
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
 inoremap <expr><C-g>     neocomplete#undo_completion()
