@@ -1,0 +1,219 @@
+command_exists () {
+    type "$1" &> /dev/null ;
+}
+
+# get platform
+platform='unknown'
+unamestr=$(uname)
+if [[ "$unamestr" == 'Darwin' ]]; then
+  platform='osx'
+elif [[ "$unamestr" == 'Linux' ]]; then
+  platform='linux'
+fi
+
+# For homebrew
+autoload run-help
+export HELPDIR=/usr/local/share/zsh/help
+export FPATH=/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions:$FPATH
+
+# requires antigen be installed
+[ -d "${HOME}/.zgen" ] && source "${HOME}/.zgen/zgen.zsh"
+
+# Locale
+#
+LC_CTYPE=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+
+# pick from oh-my-zsh plugins
+if command_exists zgen && ! zgen saved; then
+  zgen prezto editor key-bindings 'vi'
+  zgen prezto prompt theme 'sorin'
+
+  zgen prezto
+  zgen prezto environment
+  zgen prezto history
+  zgen prezto utility
+  zgen prezto completion
+  zgen prezto archive
+  zgen prezto git
+  zgen prezto fasd
+  zgen prezto homebrew
+  zgen prezto syntax-highlighting
+  zgen prezto history-substring-search
+  #zgen prezto autosuggestions
+  zgen prezto prompt
+
+  zgen save
+
+  ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)
+fi
+
+# for massive renaming
+autoload -U zmv
+
+# map keys
+bindkey -M viins 'jk' vi-cmd-mode
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^w' backward-kill-word
+
+substring-up-local() {
+    zle set-local-history 1
+    history-substring-search-up
+    zle set-local-history 0
+}
+zle -N substring-up-local
+
+substring-down-local() {
+    zle set-local-history 1
+    history-substring-search-down
+    zle set-local-history 0
+}
+zle -N substring-down-local
+
+bindkey -M vicmd 'k' substring-up-local
+bindkey -M vicmd 'j' substring-down-local
+
+[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
+
+# User configuration
+
+if [[ $platform == 'linux' ]] && [[ -d "$HOME/.linuxbrew" ]]; then
+  export MYBREW="$HOME/.linuxbrew"
+elif [[ $platform == 'osx' ]]; then
+  export MYBREW='/usr/local'
+fi
+if [[ ! -z "$MYBREW" ]]; then
+  # use brew vim as default editor
+  export EDITOR=$MYBREW/bin/vim
+
+  # homebrew paths
+  export PATH=$MYBREW/bin:$MYBREW/sbin:$PATH
+  # add python to path
+  export PATH=$MYBREW/opt/python/libexec/bin:$PATH
+  export MANPATH=$MYBREW/share/man:$MANPATH
+  export INFOPATH=$MYBREW/share/info:$MANPATH
+  export C_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$C_INCLUDE_PATH
+  export CPLUS_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$CPLUS_INCLUDE_PATH
+  export LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
+  export LD_LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
+  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$MYBREW/lib/pkgconfig:$MYBREW/Library/ENV/pkgconfig/10.8
+  export XDG_RUNTIME_DIR=$HOME/xdg_runtime
+  export LDFLAGS="-L$MYBREW/lib -L$MYBREW/usr/lib"
+  # For openblas
+  export LDFLAGS="$LDFLAGS -L$MYBREW/opt/openblas/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$MYBREW/opt/openblas/lib"
+  export CPPFLAGS="$CPPFLAGS -I$MYBREW/opt/openblas/include"
+  export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$MYBREW/opt/openblas/lib/pkgconfig"
+
+fi
+
+# export correct term for tmux
+if [[ -n "$TMUX" ]]; then
+    export TERM="screen-256color"
+else
+    export TERM="xterm-256color"
+fi
+
+alias ll="ls -l"
+alias ..="cd .."
+alias latexmk='latexmk -pdf -pvc'
+alias vlc='open -a $HOME/Applications/VLC.app/Contents/MacOS/VLC'
+# haskell tags
+alias htags='find . -name \*.\*hs | xargs hasktags -c'
+alias vag='cd ~/source/vagrant && vagrant ssh'
+
+# Add ocaml stuff to the path, and other ocaml constants
+if command_exists opam ; then
+  . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+  eval `opam config env`
+fi
+
+# local opam switch (per terminal window)
+function opamsw {
+  eval $(opam config env --switch $1)
+}
+
+# shortcut to do opam env update
+function opamenv {
+  eval $(opam config env)
+}
+
+# Add cabal to path
+[ -d "$HOME/.cabal" ] && export PATH="$PATH:$HOME/.cabal/bin"
+# Add texbin to path
+[ -d '/usr/texbin/' ] && export PATH="$PATH:/usr/texbin"
+# private homebrew github token
+[ -r "$HOME/.notpublic" ] && source "$HOME/.notpublic"
+
+# --- Temporary stuff ---
+
+# readline is shadowed by BSD libedit. Have its place handy:
+export READLINE_LIB=$MYBREW/Cellar/readline/6.3.8/lib
+export READLINE_INCLUDE=$MYBREW/Cellar/readline/6.3.8/include
+# command line needed to install readline with cabal
+alias cabal_readline_add='cabal install readline --extra-include-dirs=$READLINE_INCLUDE --extra-lib-dirs=$READLINE_LIB --configure-option=--with-readline-includes=$READLINE_INCLUDE --configure-option=--with-readline-libraries=$READLINE_LIB'
+
+# command for GDK recognizing stuff
+alias gdk_pixbuf_cache='env GDK_PIXBUF_MODULEDIR=$MYBREW/lib/gdk-pixbuf-2.0/2.10.0/loaders gdk-pixbuf-query-loaders --update-cache'
+export DOCKER_HOST=tcp://192.168.59.103:2375
+# tlmgr search for file
+alias stlmgr='tlmgr search --global --all'
+alias jup="jupyter notebook --Session.key=''"
+
+# for GO
+export GOPATH=$HOME/gocode
+
+export FP="$HOME/Google Drive/cs120_spring17/Assignments - Sp17/final_proj_files"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# QT5
+[[ $platform == 'osx' ]] && export PATH="/usr/local/opt/qt/bin:$PATH"
+
+# Marcc master connection
+marcc_setup () {
+  ssh -fNM marcc
+}
+# Casual connection
+marcc () {
+  ssh -X marcc
+}
+
+# Cleanup function
+cleanup_all () {
+  brew upgrade
+  brew cask outdated | cut -f 1 | xargs brew cask reinstall
+  brew cleanup -s
+  brew cask cleanup
+  # Mac app store
+  echo "'mas upgrade' will upgrade these:"
+  mas outdated
+}
+
+# for hard drive
+export HOME2="/Volumes/Big_Mac/Users/yotambarnoy"
+
+symlinks_root=(Applications/Games Applications/Xcode.app)
+symlinks_home=(Applications/wineskin Applications/ja2_strac Applications/Games Downloads Games 'Google Drive' Movies Music Pictures Library/Developer)
+
+create_links () {
+  for i in $symlinks_root[@]; do
+    echo "Handling /$i"
+    if [[ -L "/$i" ]]; then
+      rm -f "/$i"
+    else
+      echo "/$i exists and is not a symlinked directory!"
+    fi
+    ln -s "/Volumes/Big_Mac/$i" "/$i"
+  done
+  for i in $symlinks_home[@]; do
+    echo "Handling $HOME/$i"
+    if [[ -L "$HOME/$i" ]]; then
+      rm -f "$HOME/$i"
+    else
+      echo "$HOME/$i exists and is not a symlinked directory!"
+    fi
+    ln -s "$HOME2/$i" "$HOME/$i"
+  done
+}
