@@ -14,6 +14,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
+"Plug 'andymass/vim-matchup' " Modern matchit
 Plug 'ctrlpvim/ctrlp.vim'        " Fuzzy file matching
 Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
@@ -48,6 +49,7 @@ Plug 'tomtom/tcomment_vim'      " Automatic commenting
 Plug 'vimwiki/vimwiki'         " Wiki in vim
 Plug 'mhinz/vim-signify'  " Show git changes in side
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'   " Show register contents
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
@@ -444,7 +446,7 @@ let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " Make vimwiki use Dropbox
-let g:vimwiki_list = [{'path': '~/Dropbox/wiki/vimwiki/'}]
+let g:vimwiki_list = [{'path': '~/gdrive/wiki/vimwiki/'}]
 
 " NERDTree
 let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
