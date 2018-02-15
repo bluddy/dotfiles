@@ -65,7 +65,7 @@ Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rc
 Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'Shougo/deoplete.nvim'    " Completion
+Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
 Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
