@@ -440,7 +440,7 @@ let g:ctrlp_extensions = ['tag', 'buffertag']
 let g:ctrlp_working_path_mode = 'wra'
 let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
 let g:ctrlp_match_window = 'min:4,max:10,results=100'
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g'
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
 " Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
