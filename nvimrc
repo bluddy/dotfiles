@@ -78,6 +78,7 @@ Plug 'roxma/vim-tmux-clipboard' " Integrate vim and tmux clipboards
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
 Plug 'w0rp/ale' " Asynchronous lint engine
+Plug 'nacitar/a.vim' " Switch between related files
 
 call plug#end()
 
@@ -195,8 +196,14 @@ if has("autocmd")
         \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ | nnoremap <LocalLeader>l :<C-u>MerlinLocate<CR>
-        \ | nnoremap <LocalLeader>o :<C-u>MerlinOccurrences<CR>
+        \ | nnoremap <silent><buffer> <LocalLeader>l :<C-u>MerlinLocate<CR>
+        \ | nnoremap <silent><buffer> <LocalLeader>o :<C-u>MerlinOccurrences<CR>
+        \ | nnoremap <silent><buffer> <LocalLeader>a :<C-u>A<CR>
+        \ | map  <silent><buffer> <LocalLeader>t :<C-u>MerlinTypeOf<CR>
+        \ | vmap <silent><buffer> <LocalLeader>t :<C-u>MerlinTypeOfSel<CR>
+    autocmd FileType cpp,c setlocal tabstop=2 expandtab softtabstop=2
+        \ shiftwidth=2
+        \ | nnoremap <silent> <LocalLeader>a :<C-u>A<CR>
     autocmd FileType python setlocal tabstop=4 expandtab softtabstop=4
         \ shiftwidth=4 smarttab shiftround nojoinspaces
     " Make sure quickfix always opens at the bottom
