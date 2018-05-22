@@ -79,6 +79,7 @@ Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
 Plug 'w0rp/ale' " Asynchronous lint engine
 Plug 'nacitar/a.vim' " Switch between related files
+Plug 'sbdchd/neoformat' " Formatting tool
 
 call plug#end()
 
