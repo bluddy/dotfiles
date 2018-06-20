@@ -215,16 +215,16 @@ if has("autocmd")
   augroup END
   augroup fugitive
     " autocmd!
-        " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-        autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
-        " Don't flood open buffers with fugitive files
-        autocmd BufReadPost fugitive://* set bufhidden=delete
+    " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
+    autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+    " Don't flood open buffers with fugitive files
+    autocmd BufReadPost fugitive://* set bufhidden=delete
   augroup END
   augroup highlight
     autocmd!
-        " Remove search highlighting for insert mode
-        autocmd InsertEnter * :setlocal nohlsearch
-        autocmd InsertLeave * :setlocal hlsearch
+    " Remove search highlighting for insert mode
+    autocmd InsertEnter * :setlocal nohlsearch
+    autocmd InsertLeave * :setlocal hlsearch
   augroup END
   augroup relative
     autocmd!
@@ -238,6 +238,7 @@ if has("autocmd")
   augroup END
   " Settings for denite
   augroup DeniteInit
+    autocmd!
     autocmd FileType denite call s:denite_my_settings()
     function! s:denite_my_settings()"{{{
         nmap <buffer> <ESC> <Plug>(denite_exit)
@@ -248,9 +249,12 @@ if has("autocmd")
   augroup END
   " For OCaml
   augroup PostPlugins
+    autocmd!
     autocmd VimEnter *
         \ highlight EnclosingExpr ctermbg=Red
   augroup END
+  " Hide preview after completion or when leaving insert.
+  autocmd! Preview autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 endif
 
 " ----------------- Remaps ---------------------
