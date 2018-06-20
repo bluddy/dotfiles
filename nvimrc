@@ -257,7 +257,7 @@ if has("autocmd")
         \ highlight EnclosingExpr ctermbg=Red
   augroup END
   " Hide preview after completion or when leaving insert.
-  autocmd! Preview autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  autocmd! Preview autocmd InsertLeave * silent! pclose!
 endif
 
 " ----------------- Remaps ---------------------
