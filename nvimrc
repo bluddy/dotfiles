@@ -69,6 +69,7 @@ Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
 Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
+Plug 'copy/deoplete-ocaml' " Deoplete plugin for merlin
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'bfredl/nvim-miniyank' " yank ring
 Plug 'tpope/vim-obsession'  " Auto vim session saving
@@ -80,6 +81,8 @@ Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
 Plug 'w0rp/ale' " Asynchronous lint engine
 Plug 'nacitar/a.vim' " Switch between related files
 Plug 'sbdchd/neoformat' " Formatting tool
+Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Needed for vebugger
+Plug 'idanarye/vim-vebugger' " Debugger
 
 call plug#end()
 
@@ -416,16 +419,20 @@ if executable('opam')
   if isdirectory(g:opamshare."/merlin/vim")
     execute "set rtp+=" . g:opamshare."/merlin/vim"
     let g:merlin_split_method='never'
+    let g:merlin_completion_with_doc = 1
   endif
 endif
 
 " Deoplete
-if !exists('g:deoplete#omni_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
-" Deoplete options
-let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
 let g:deoplete#enable_at_startup = 1
+" if !exists('g:deoplete#omni#input_patterns')
+"   let g:deoplete#omni#input_patterns = {}
+" endif
+" let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
+let g:deoplete#complete_method = "complete"
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
+let g:deoplete#auto_complete_delay = 0
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
 inoremap <expr><C-g>     deoplete#undo_completion()
