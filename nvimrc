@@ -67,10 +67,10 @@ Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
-Plug 'copy/deoplete-ocaml' " Ocaml plugin
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
 Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
+Plug 'copy/deoplete-ocaml' " Deoplete plugin for merlin
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'bfredl/nvim-miniyank' " yank ring
 Plug 'tpope/vim-obsession'  " Auto vim session saving
@@ -81,9 +81,11 @@ Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
 Plug 'w0rp/ale' " Asynchronous lint engine
 Plug 'nacitar/a.vim' " Switch between related files
+Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Needed for vebugger
 Plug 'idanarye/vim-vebugger' " Vim debugger
 Plug 'samoshkin/vim-mergetool'
 Plug 'regedarek/ZoomWin' " C-w o to zoom in/out
+Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
 
 call plug#end()
 
@@ -217,17 +219,22 @@ if has("autocmd")
     autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   augroup fugitive
+<<<<<<< HEAD
     autocmd!
         " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
+=======
+    " autocmd!
+    " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
+>>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
     autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
     " Don't flood open buffers with fugitive files
     autocmd BufReadPost fugitive://* set bufhidden=delete
   augroup END
   augroup highlight
     autocmd!
-        " Remove search highlighting for insert mode
-        autocmd InsertEnter * :setlocal nohlsearch
-        autocmd InsertLeave * :setlocal hlsearch
+    " Remove search highlighting for insert mode
+    autocmd InsertEnter * :setlocal nohlsearch
+    autocmd InsertLeave * :setlocal hlsearch
   augroup END
   augroup relative
     autocmd!
@@ -256,6 +263,8 @@ if has("autocmd")
     autocmd VimEnter *
         \ highlight EnclosingExpr ctermbg=Red
   augroup END
+  " Hide preview after completion or when leaving insert.
+  autocmd! Preview autocmd InsertLeave * silent! pclose!
 endif
 
 " ----------------- Remaps ---------------------
@@ -412,15 +421,25 @@ nnoremap <silent> <Leader>df :<C-U>call DiffToggle()<CR>
   let g:sneak#use_ic_scs = 0
 
 " Merlin from opam
+<<<<<<< HEAD
   if executable('opam')
     let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
     if isdirectory(g:opamshare."/merlin/vim")
       execute "set rtp+=" . g:opamshare."/merlin/vim"
       let g:merlin_split_method='never'
     endif
+=======
+if executable('opam')
+  let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
+  if isdirectory(g:opamshare."/merlin/vim")
+    execute "set rtp+=" . g:opamshare."/merlin/vim"
+    let g:merlin_split_method='never'
+    let g:merlin_completion_with_doc = 1
+>>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
   endif
 
 " Deoplete
+<<<<<<< HEAD
 "if !exists('g:deoplete#omni_patterns')
 "  let g:deoplete#omni#input_patterns = {}
 "endif
@@ -432,6 +451,17 @@ let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#complete_method = "complete"
 "let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
+=======
+let g:deoplete#enable_at_startup = 1
+" if !exists('g:deoplete#omni#input_patterns')
+"   let g:deoplete#omni#input_patterns = {}
+" endif
+" let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
+let g:deoplete#complete_method = "complete"
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
+let g:deoplete#auto_complete_delay = 0
+>>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
 let g:deoplete#auto_complete_delay = 0
