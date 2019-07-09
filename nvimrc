@@ -15,7 +15,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/gundo.vim'     " Undo graph
 Plug 'tmhedberg/matchit' " Match brackets
 "Plug 'andymass/vim-matchup' " Modern matchit
-Plug 'ctrlpvim/ctrlp.vim'        " Fuzzy file matching
+"Plug 'ctrlpvim/ctrlp.vim'        " Fuzzy file matching (replaced by fzf)
 Plug 'tpope/vim-abolish' " Easy, simple regex substitutes
 Plug 'tpope/vim-surround' " Manipulate parentheses/quotes
 Plug 'tpope/vim-unimpaired' " Bracket mappings
@@ -24,9 +24,10 @@ Plug 'tpope/vim-vinegar'    " Enhances using netrw in a window
 Plug 'tpope/vim-sleuth'    " Detect file settings
 Plug 'tpope/vim-eunuch'    " Unix commands
 Plug 'tpope/vim-fugitive'       " Git helper
-Plug 'int3/vim-extradite'       " Git: view commit tree
+Plug 'int3/vim-extradite'       " Git: view commit tree :Extradite
+Plug 'junegunn/gv.vim'          " Git: :GV :GV! commit browser
 Plug 'scrooloose/nerdtree'
-"Plug 'scrooloose/syntastic' " Syntax checking
+"Plug 'scrooloose/syntastic' " Syntax checking (replaced by ALE)
 Plug 'godlygeek/tabular' " Aligning tables
 Plug 'kshenoy/vim-signature'   " Display marks
 Plug 'bling/vim-airline'       " Status line
@@ -66,19 +67,23 @@ Plug 'jreybert/vimagit'
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
+Plug 'copy/deoplete-ocaml' " Ocaml plugin
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
 Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
 Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'bfredl/nvim-miniyank' " yank ring
 Plug 'tpope/vim-obsession'  " Auto vim session saving
-Plug 'jgdavey/tslime.vim'       " Copy to tmux
+Plug 'jpalardy/vim-slime'   " Copy to tmux
 Plug 'hardenedapple/vsh'    " Modifiable shell windows
 Plug 'roxma/vim-tmux-clipboard' " Integrate vim and tmux clipboards
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'rgrinberg/vim-ocaml'  " Ocaml runtime syntax higlighting
 Plug 'w0rp/ale' " Asynchronous lint engine
 Plug 'nacitar/a.vim' " Switch between related files
+Plug 'idanarye/vim-vebugger' " Vim debugger
+Plug 'samoshkin/vim-mergetool'
+Plug 'regedarek/ZoomWin' " C-w o to zoom in/out
 
 call plug#end()
 
@@ -193,7 +198,6 @@ if has("autocmd")
     autocmd FileType markdown nnoremap <buffer> <LocalLeader>p o<CR>\pause<CR><Esc>
     autocmd FileType haskell setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 smarttab shiftround nojoinspaces
-        \ omnifunc=necoghc#omnifunc
     autocmd FileType ocaml setlocal tabstop=2 expandtab softtabstop=2
         \ shiftwidth=2 smarttab shiftround nojoinspaces
         \ | nnoremap <silent><buffer> <LocalLeader>l :<C-u>MerlinLocate<CR>
@@ -213,11 +217,11 @@ if has("autocmd")
     autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   augroup fugitive
-    " autocmd!
+    autocmd!
         " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-        autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
-        " Don't flood open buffers with fugitive files
-        autocmd BufReadPost fugitive://* set bufhidden=delete
+    autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
+    " Don't flood open buffers with fugitive files
+    autocmd BufReadPost fugitive://* set bufhidden=delete
   augroup END
   augroup highlight
     autocmd!
@@ -237,6 +241,7 @@ if has("autocmd")
   augroup END
   " Settings for denite
   augroup DeniteInit
+    autocmd!
     autocmd FileType denite call s:denite_my_settings()
     function! s:denite_my_settings()"{{{
         nmap <buffer> <ESC> <Plug>(denite_exit)
@@ -247,6 +252,7 @@ if has("autocmd")
   augroup END
   " For OCaml
   augroup PostPlugins
+    autocmd!
     autocmd VimEnter *
         \ highlight EnclosingExpr ctermbg=Red
   augroup END
@@ -406,23 +412,29 @@ nnoremap <silent> <Leader>df :<C-U>call DiffToggle()<CR>
   let g:sneak#use_ic_scs = 0
 
 " Merlin from opam
-if executable('opam')
-  let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
-  if isdirectory(g:opamshare."/merlin/vim")
-    execute "set rtp+=" . g:opamshare."/merlin/vim"
-    let g:merlin_split_method='never'
+  if executable('opam')
+    let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
+    if isdirectory(g:opamshare."/merlin/vim")
+      execute "set rtp+=" . g:opamshare."/merlin/vim"
+      let g:merlin_split_method='never'
+    endif
   endif
-endif
 
 " Deoplete
-if !exists('g:deoplete#omni_patterns')
-  let g:deoplete#omni#input_patterns = {}
+"if !exists('g:deoplete#omni_patterns')
+"  let g:deoplete#omni#input_patterns = {}
+"endif
+if !exists('g:deoplete#ignore_sources')
+  let g:deoplete#ignore_sources = {}
 endif
+let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
 " Deoplete options
-let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#complete_method = "complete"
+"let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
+let g:deoplete#auto_complete_delay = 0
 inoremap <expr><C-g>     deoplete#undo_completion()
 
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -443,11 +455,16 @@ let g:syntastic_cpp_check_header = 1
 let g:startify_bookmarks = ['~/.config/nvim/init.vim', '~/.zshrc']
 
 " CtrlP extensions
-let g:ctrlp_extensions = ['tag', 'buffertag']
-let g:ctrlp_working_path_mode = 'wra'
-let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
-let g:ctrlp_match_window = 'min:4,max:10,results=100'
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+"let g:ctrlp_extensions = ['tag', 'buffertag']
+"let g:ctrlp_working_path_mode = 'wra'
+"let g:ctrlp_switch_buffer = 0 " don't switch to existing buffer
+"let g:ctrlp_match_window = 'min:4,max:10,results=100'
+"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+" CtrlP calls fzf :Buffers and :Files
+nnoremap <C-P> :<C-U>Files<CR>
+nnoremap <C-P><C-P> :<C-U>Buffers<CR>
+
 
 " Change ultisnip expand triggers
 let g:UltiSnipsExpandTrigger="<c-j>"
@@ -487,8 +504,6 @@ nnoremap <leader>ga :<C-U>Grepper -tool ag<CR>
 nnoremap <leader>gs :<C-U>Grepper -tool ag -side<CR>
 nnoremap <leader>* :<C-U>Grepper -tool ag -cword -noprompt<CR>
 
-" TSlime bindings
-vmap <C-c><C-c> <Plug>SendSelectionToTmux
-nmap <C-c><C-c> <Plug>NormalModeSendToTmux
-nmap <C-c>r <Plug>SetTmuxVars
+" vim-slime
+let g:slime_target = "tmux"
 
