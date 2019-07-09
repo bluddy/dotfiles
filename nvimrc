@@ -219,13 +219,8 @@ if has("autocmd")
     autocmd FileType tex execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
   augroup END
   augroup fugitive
-<<<<<<< HEAD
     autocmd!
         " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
-=======
-    " autocmd!
-    " Allow .. instead of :edit %:h when browsing in fugitive (git) trees
->>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
     autocmd User fugitive if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' | nnoremap <buffer> .. :edit %:h<CR> | endif
     " Don't flood open buffers with fugitive files
     autocmd BufReadPost fugitive://* set bufhidden=delete
@@ -264,7 +259,7 @@ if has("autocmd")
         \ highlight EnclosingExpr ctermbg=Red
   augroup END
   " Hide preview after completion or when leaving insert.
-  autocmd! Preview autocmd InsertLeave * silent! pclose!
+  "autocmd! Preview autocmd InsertLeave * silent! pclose!
 endif
 
 " ----------------- Remaps ---------------------
@@ -421,25 +416,16 @@ nnoremap <silent> <Leader>df :<C-U>call DiffToggle()<CR>
   let g:sneak#use_ic_scs = 0
 
 " Merlin from opam
-<<<<<<< HEAD
-  if executable('opam')
-    let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
-    if isdirectory(g:opamshare."/merlin/vim")
-      execute "set rtp+=" . g:opamshare."/merlin/vim"
-      let g:merlin_split_method='never'
-    endif
-=======
 if executable('opam')
   let g:opamshare=substitute(system('opam config var share'),'\n$','','''')
   if isdirectory(g:opamshare."/merlin/vim")
     execute "set rtp+=" . g:opamshare."/merlin/vim"
     let g:merlin_split_method='never'
     let g:merlin_completion_with_doc = 1
->>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
   endif
+endif
 
 " Deoplete
-<<<<<<< HEAD
 "if !exists('g:deoplete#omni_patterns')
 "  let g:deoplete#omni#input_patterns = {}
 "endif
@@ -451,17 +437,6 @@ let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#complete_method = "complete"
 "let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
-=======
-let g:deoplete#enable_at_startup = 1
-" if !exists('g:deoplete#omni#input_patterns')
-"   let g:deoplete#omni#input_patterns = {}
-" endif
-" let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
-let g:deoplete#complete_method = "complete"
-let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
-let g:deoplete#auto_complete_delay = 0
->>>>>>> 4372cc4fa72b68f0206d0bf5f2407ea6b12cc71f
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
 let g:deoplete#auto_complete_delay = 0
