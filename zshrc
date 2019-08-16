@@ -3,55 +3,15 @@ command_exists () {
 }
 
 # get platform
-platform='unknown'
-unamestr=$(uname)
-if [[ "$unamestr" == 'Darwin' ]]; then
-  platform='osx'
-elif [[ "$unamestr" == 'Linux' ]]; then
-  platform='linux'
-fi
-
-# For homebrew
-if [[ $platform == 'osx' ]]; then
-  autoload run-help
-  export HELPDIR=/usr/local/share/zsh/help
-  export FPATH=/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions:$FPATH
-  # Locale
-  #
-  LC_CTYPE=en_US.UTF-8
-  LC_ALL=en_US.UTF-8
-  export MYBREW='/usr/local'
-  if [[ ! -z "$MYBREW" ]]; then
-    # use brew vim as default editor
-    export EDITOR=$MYBREW/bin/vim
-
-    # homebrew paths
-    export PATH=$MYBREW/bin:$MYBREW/sbin:$PATH
-    export MANPATH=$MYBREW/share/man:$MANPATH
-    export INFOPATH=$MYBREW/share/info:$MANPATH
-    export C_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$C_INCLUDE_PATH
-    export CPLUS_INCLUDE_PATH=$MYBREW/include:$MYBREW/usr/include:$CPLUS_INCLUDE_PATH
-    export LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
-    export LD_LIBRARY_PATH=$MYBREW/lib:$MYBREW/usr/lib
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$MYBREW/lib/pkgconfig:$MYBREW/Library/ENV/pkgconfig/10.8
-    export XDG_RUNTIME_DIR=$HOME/xdg_runtime
-    export LDFLAGS="-L$MYBREW/lib -L$MYBREW/usr/lib"
-  fi
-  # export correct term for tmux
-  if [[ -n "$TMUX" ]]; then
-      export TERM="screen-256color"
-  else
-      export TERM="xterm-256color"
-  fi
-
-  alias vlc='open -a $HOME/Applications/VLC.app/Contents/MacOS/VLC'
-  # Add texbin to path
-  [ -d '/usr/texbin/' ] && export PATH="$PATH:/usr/texbin"
-fi
+platform='linux'
 
 # requires antigen be installed
 [ -d "${HOME}/.zgen" ] && source "${HOME}/.zgen/zgen.zsh"
 
+# Locale
+#
+#LC_CTYPE=en_US.UTF-8
+#LC_ALL=en_US.UTF-8
 
 # pick from oh-my-zsh plugins
 if command_exists zgen && ! zgen saved; then
@@ -114,12 +74,10 @@ fi
 alias ll="ls -l"
 alias ..="cd .."
 alias latexmk='latexmk -pdf -pvc'
-# haskell tags
-alias htags='find . -name \*.\*hs | xargs hasktags -c'
-
 
 # local opam switch (per terminal window)
 function opamsw() {
+  [[ $# < 1 ]] && echo 'Missing switch' && return 1
   eval $(opam config env --switch $1)
 }
 
@@ -134,9 +92,10 @@ function opamenv() {
 
 # tlmgr search for file
 alias stlmgr='tlmgr search --global --all'
+alias jup="jupyter notebook --Session.key=''"
 
 # for GO
-export GOPATH=$HOME/gocode
+[[ -d $HOME/gocode ]] && export GOPATH=$HOME/gocode
 
 # Marcc master connection
 marcc_setup () {
@@ -146,9 +105,35 @@ marcc_setup () {
 marcc () {
   ssh -X marcc
 }
+
+# Cleanup function
+cleanup_all () {
+  brew upgrade
+  brew cleanup -s
+}
+
+# Windows shortcuts
+export WIN="/mnt/c/"
+export WINHOME="$WIN/Users/yotam"
+
+# For SSH forwarding
+export DISPLAY=127.0.0.1:0
+
 # For local python stuff
-export PATH="$HOME/.local/bin:$PATH"
+[[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+
+[[ -d $HOME/npm/bin ]] && export PATH="$HOME/npm/bin:$PATH"
+
 # Add usr/bin to path
-export PATH="$HOME/usr/bin:$PATH"
+export PATH="$HOME/usr/local/bin:$HOME/usr/bin:$PATH"
+
+# google cloud
+if [[ -d $HOME/google-cloud-sdk ]]; then
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
+fi
+
 # disable context-switch chars
 printf "\e[?1004l"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
