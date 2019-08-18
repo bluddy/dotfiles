@@ -72,7 +72,6 @@ Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
 Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
 Plug 'copy/deoplete-ocaml' " Deoplete plugin for merlin
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
-Plug 'bfredl/nvim-miniyank' " yank ring
 Plug 'tpope/vim-obsession'  " Auto vim session saving
 Plug 'jpalardy/vim-slime'   " Copy to tmux
 Plug 'hardenedapple/vsh'    " Modifiable shell windows
@@ -131,7 +130,7 @@ set showmatch
 " Wrap all keys including backspace
 set whichwrap=b,s,h,l,<,>,[,]
 
-set clipboard=unnamed
+set clipboard^=unnamed,unnamedplus
 
 " Prevent breaking up of lines
 set textwidth=0 wrapmargin=0
@@ -492,13 +491,6 @@ let g:vimfiler_as_default_explorer = 1
 let g:vimshell_prompt_expr =
 \ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
 let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
-
-" Miniyank (kill ring) requires XDG_RUNTIME_DIR:
-if !empty($XDG_RUNTIME_DIR)
-  map p <Plug>(miniyank-autoput)
-  map P <Plug>(miniyank-autoPut)
-  nmap <leader>n <Plug>(miniyank-cycle)
-endif
 
 " Grepper
 nmap gs <plug>(GrepperOperator)

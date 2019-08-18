@@ -122,7 +122,7 @@ export WIN="/mnt/c/"
 export WINHOME="$WIN/Users/yotam"
 
 # For SSH forwarding
-export DISPLAY=127.0.0.1:0
+#export DISPLAY=127.0.0.1:0
 
 # For local python stuff
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
