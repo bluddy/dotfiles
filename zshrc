@@ -5,8 +5,13 @@ command_exists () {
 # get platform
 platform='linux'
 
-# requires antigen be installed
-[ -d "${HOME}/.zgen" ] && source "${HOME}/.zgen/zgen.zsh"
+# requires zgen be installed
+if [[ -d "${HOME}/.zgen" ]]; then
+  source "${HOME}/.zgen/zgen.zsh"
+else
+  git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+  source "${HOME}/.zgen/zgen.zsh"
+fi
 
 # Locale
 #
