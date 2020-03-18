@@ -142,3 +142,7 @@ fi
 printf "\e[?1004l"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag -g ""'
+
+# For AMD CPU
+export MKL_DEBUG_CPU_TYPE=5
