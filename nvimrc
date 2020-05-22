@@ -469,6 +469,7 @@ let g:startify_bookmarks = ['~/.config/nvim/init.vim', '~/.zshrc']
 " CtrlP calls fzf :Buffers and :Files
 nnoremap <C-P> :<C-U>Files<CR>
 nnoremap <C-P><C-P> :<C-U>Buffers<CR>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
 
 " Change ultisnip expand triggers
@@ -512,3 +513,21 @@ nnoremap <leader>* :<C-U>Grepper -tool ag -cword -noprompt<CR>
 " vim-slime
 let g:slime_target = "tmux"
 
+let s:off = match(system('uname -a'), 'Microsoft')
+if s:off != -1
+  " Support WSL
+  let g:clipboard = {
+    \   'name': 'WslClipboard',
+    \   'copy': {
+    \      '+': 'clip.exe',
+    \      '*': 'clip.exe',
+    \    },
+    \   'paste': {
+    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
+endif
+
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
