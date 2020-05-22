@@ -63,7 +63,8 @@ Plug 'christoomey/vim-tmux-navigator' " Move around tmux
 Plug 'mhinz/vim-grepper'       " Asynchronous search with ag etc
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
 "Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
-Plug 'jreybert/vimagit'
+Plug 'jreybert/vimagit'        " Cool interface for git
+Plug 'rhysd/git-messenger.vim' " Explore commit messages per line
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
@@ -468,6 +469,7 @@ let g:startify_bookmarks = ['~/.config/nvim/init.vim', '~/.zshrc']
 " CtrlP calls fzf :Buffers and :Files
 nnoremap <C-P> :<C-U>Files<CR>
 nnoremap <C-P><C-P> :<C-U>Buffers<CR>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
 
 " Change ultisnip expand triggers
@@ -517,4 +519,21 @@ tnoremap <C-v><C-k> <C-k>
 tnoremap <C-l> <C-\><C-n><C-w>l
 tnoremap <C-v><C-l> <C-l>
 
+
+let s:off = match(system('uname -a'), 'Microsoft')
+if s:off != -1
+  " Support WSL
+  let g:clipboard = {
+    \   'name': 'WslClipboard',
+    \   'copy': {
+    \      '+': 'clip.exe',
+    \      '*': 'clip.exe',
+    \    },
+    \   'paste': {
+    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
+endif
 
