@@ -5,8 +5,13 @@ command_exists () {
 # get platform
 platform='linux'
 
-# requires antigen be installed
-[ -d "${HOME}/.zgen" ] && source "${HOME}/.zgen/zgen.zsh"
+# requires zgen be installed
+if [[ -d "${HOME}/.zgen" ]]; then
+  source "${HOME}/.zgen/zgen.zsh"
+else
+  git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+  source "${HOME}/.zgen/zgen.zsh"
+fi
 
 # Locale
 #
@@ -117,7 +122,7 @@ export WIN="/mnt/c/"
 export WINHOME="$WIN/Users/yotam"
 
 # For SSH forwarding
-export DISPLAY=127.0.0.1:0
+#export DISPLAY=127.0.0.1:0
 
 # For local python stuff
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
@@ -137,3 +142,7 @@ fi
 printf "\e[?1004l"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag -g ""'
+
+# For AMD CPU
+export MKL_DEBUG_CPU_TYPE=5
