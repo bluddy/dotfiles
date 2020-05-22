@@ -504,3 +504,17 @@ nnoremap <leader>* :<C-U>Grepper -tool ag -cword -noprompt<CR>
 " vim-slime
 let g:slime_target = "tmux"
 
+" Terminal
+tnoremap <Esc> <C-\><C-n>
+tnoremap jk <C-\><C-n>
+tnoremap <C-v><Esc> <Esc>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-v><C-h> <C-h>
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-v><C-j> <C-j>
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-v><C-k> <C-k>
+tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap <C-v><C-l> <C-l>
+
+
