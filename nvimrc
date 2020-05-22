@@ -63,7 +63,8 @@ Plug 'christoomey/vim-tmux-navigator' " Move around tmux
 Plug 'mhinz/vim-grepper'       " Asynchronous search with ag etc
 Plug 'osyo-manga/vim-monster', { 'for': 'ruby' }  " Ruby completion (requires rcodetools & vimproc)
 "Plug 'def-lkb/ocp-indent-vim', { 'for': 'ocaml' } " Indentation for ocaml
-Plug 'jreybert/vimagit'
+Plug 'jreybert/vimagit'        " Cool interface for git
+Plug 'rhysd/git-messenger.vim' " Explore commit messages per line
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
