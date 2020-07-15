@@ -429,10 +429,10 @@ endif
 "if !exists('g:deoplete#omni_patterns')
 "  let g:deoplete#omni#input_patterns = {}
 "endif
-if !exists('g:deoplete#ignore_sources')
-  let g:deoplete#ignore_sources = {}
-endif
-let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
+"if !exists('g:deoplete#ignore_sources')
+"  let g:deoplete#ignore_sources = {}
+"endif
+"let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
 " Deoplete options
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#complete_method = "complete"
