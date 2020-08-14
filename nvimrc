@@ -68,9 +68,10 @@ Plug 'rhysd/git-messenger.vim' " Explore commit messages per line
 Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
-Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
-Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
-Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
+"Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
+"Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
+"Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
+Plug 'Shougo/deoplete-lsp' " LSP plugin
 Plug 'copy/deoplete-ocaml' " Deoplete plugin for merlin
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'tpope/vim-obsession'  " Auto vim session saving
@@ -86,6 +87,8 @@ Plug 'idanarye/vim-vebugger' " Vim debugger
 Plug 'samoshkin/vim-mergetool'
 Plug 'regedarek/ZoomWin' " C-w o to zoom in/out
 Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
+Plug 'nvim-treesitter/nvim-treesitter' " Treesitter (TInstall)
+Plug 'neovim/nvim-lsp' " LSP default configurations
 
 call plug#end()
 
@@ -535,5 +538,14 @@ if s:off != -1
     \   },
     \   'cache_enabled': 0,
     \ }
+endif
+
+" Use LSP
+if exists('g:nvim_lsp')
+
+:lua << END
+  require'nvim_lsp'.pyls.setup()
+END
+
 endif
 
