@@ -44,6 +44,7 @@ Plug 'garbas/vim-snipmate'     " Snippets for snipmate (not working great!)
 Plug 'honza/vim-snippets'
 Plug 'def-lkb/vimbufsync'      " Heuristics to identify buffer changes
 Plug 'justinmk/vim-sneak'      " Quick two-char searching; also replaces easymotion
+Plug 'easymotion/vim-easymotion' " leader-leader w
 Plug 'wellle/targets.vim'      " More text objects
 Plug 'Peeja/vim-cdo'           " Allows operations over entire quicklist
 Plug 'tomtom/tcomment_vim'      " Automatic commenting
@@ -85,7 +86,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Needed for vebugger
 Plug 'idanarye/vim-vebugger' " Vim debugger
 Plug 'samoshkin/vim-mergetool'
 Plug 'regedarek/ZoomWin' " C-w o to zoom in/out
-Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
+"Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
 
 call plug#end()
 
@@ -96,6 +97,8 @@ set nocompatible " vim rather than vi settings
 set autoread " Update automatically on file change
 
 set t_Co=256
+
+let g:snipMate = { 'snippet_version' : 1 }
 
 "colorscheme solarized
 "let g:solarized_termcolors=256
@@ -439,7 +442,6 @@ let g:deoplete#complete_method = "complete"
 "let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
-let g:deoplete#auto_complete_delay = 0
 inoremap <expr><C-g>     deoplete#undo_completion()
 
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
