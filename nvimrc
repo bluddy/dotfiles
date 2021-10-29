@@ -70,9 +70,11 @@ Plug 'lervag/vimtex'           " Advanced latex plugin
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' } " Completion
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }     " Python completion
-Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
-Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
-Plug 'copy/deoplete-ocaml' " Deoplete plugin for merlin
+"Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby'}   " Ruby completion
+"Plug 'zchee/deoplete-clang', { 'for': 'c++'}        " C++ completion
+Plug 'Shougo/deoplete-lsp' " LSP plugin
+Plug 'neovim/nvim-lsp' " LSP default configurations
+Plug 'copy/deoplete-ocaml', { 'for': 'ocaml' } " Deoplete plugin for merlin
 Plug 'metakirby5/codi.vim'     " Coding scratchpad
 Plug 'tpope/vim-obsession'  " Auto vim session saving
 Plug 'jpalardy/vim-slime'   " Copy to tmux
@@ -86,7 +88,10 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Needed for vebugger
 Plug 'idanarye/vim-vebugger' " Vim debugger
 Plug 'samoshkin/vim-mergetool'
 Plug 'regedarek/ZoomWin' " C-w o to zoom in/out
-"Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
+Plug 'sbdchd/neoformat' " Formatting tool :Neoformat, can do ocp-indent
+Plug 'nvim-treesitter/nvim-treesitter' " Treesitter (TInstall)
+Plug 'ncm2/float-preview.nvim' " Floating window support instead of preview window
+Plug 'puremourning/vimspector' " Debug Protocol Integration
 
 call plug#end()
 
@@ -429,20 +434,20 @@ if executable('opam')
 endif
 
 " Deoplete
-"if !exists('g:deoplete#omni_patterns')
-"  let g:deoplete#omni#input_patterns = {}
-"endif
-"if !exists('g:deoplete#ignore_sources')
-"  let g:deoplete#ignore_sources = {}
-"endif
-"let g:deoplete#ignore_sources.ocaml = ['buffer', 'around', 'member', 'tag']
-" Deoplete options
+set completeopt-=preview " Disable duplicate messages
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#complete_method = "complete"
 "let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
+<<<<<<< HEAD
 let g:deoplete#max_menu_width = 200
 let g:deoplete#max_abbr_width = 200
+=======
+"let g:deoplete#max_menu_width = 200
+"let g:deoplete#max_abbr_width = 200
+>>>>>>> a10a19df61cf0f9f678bee64bade220d749cdda2
 inoremap <expr><C-g>     deoplete#undo_completion()
+let g:float_preview#docked = 0 " Undocked floating windows
+let g:float_preview#max_width = 100
 
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
 
@@ -521,6 +526,8 @@ tnoremap <C-v><C-k> <C-k>
 tnoremap <C-l> <C-\><C-n><C-w>l
 tnoremap <C-v><C-l> <C-l>
 
+" Good bindings for debugger
+let g:vimspector_enable_mappings = 'HUMAN'
 
 let s:off = match(system('uname -a'), 'Microsoft')
 if s:off != -1
@@ -538,4 +545,11 @@ if s:off != -1
     \   'cache_enabled': 0,
     \ }
 endif
+
+
+" Use LSP
+":lua << EOF
+"  require'nvim_lsp'.pyls.setup{}
+"EOF
+
 

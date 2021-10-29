@@ -149,5 +149,5 @@ export MKL_DEBUG_CPU_TYPE=5
 
 # set title function
 set_title () {
-  echo -ne "\033]0;@1\007"
+  echo -ne "\033]0;$1\007"
 }
