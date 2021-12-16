@@ -438,13 +438,8 @@ set completeopt-=preview " Disable duplicate messages
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#complete_method = "complete"
 "let g:deoplete#omni#input_patterns.ocaml = '[^. *\t]\.\w*|\s\w+|#'
-<<<<<<< HEAD
-let g:deoplete#max_menu_width = 200
-let g:deoplete#max_abbr_width = 200
-=======
 "let g:deoplete#max_menu_width = 200
 "let g:deoplete#max_abbr_width = 200
->>>>>>> a10a19df61cf0f9f678bee64bade220d749cdda2
 inoremap <expr><C-g>     deoplete#undo_completion()
 let g:float_preview#docked = 0 " Undocked floating windows
 let g:float_preview#max_width = 100
