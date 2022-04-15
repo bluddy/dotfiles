@@ -145,9 +145,16 @@ printf "\e[?1004l"
 export FZF_DEFAULT_COMMAND='ag -g ""'
 
 # For AMD CPU
-export MKL_DEBUG_CPU_TYPE=5
+#export MKL_DEBUG_CPU_TYPE=5
 
 # set title function
 set_title () {
   echo -ne "\033]0;$1\007"
 }
+
+# For WSL
+if grep -qi Microsoft /proc/version; then
+  export DISPLAY=$(ip route list default | awk '{print $3}'):0
+  export LIBG_ALWAYS_INDIRECT=1
+fi
+

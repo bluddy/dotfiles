@@ -7,7 +7,4 @@ ln -s dotfiles/agignore .agignore
 ln -s dotfiles/ocamlinit .ocamlinit
 ln -s dotfiles/tmux_linux.conf .tmux.conf
 ln -s dotfiles/zshrc .zshrc
-mkdir -p $HOME/.config/nvim
-cd $HOME/.config/nvim
-ln -s $HOME/dotfiles/nvimrc init.vim
-cd $HOME
+ln -s dotfiles/nvim $HOME/.config/nvim
