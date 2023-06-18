@@ -11,10 +11,9 @@ set autoread " Update automatically on file change
 
 set t_Co=256
 
-"colorscheme solarized
-"let g:solarized_termcolors=256
-"let g:solarized_visibility="high"
-"let g:solarized_contrast="high"
+let g:solarized_termcolors=256
+let g:solarized_visibility="high"
+let g:solarized_contrast="high"
 set termguicolors
 set background=light
 colorscheme solarized

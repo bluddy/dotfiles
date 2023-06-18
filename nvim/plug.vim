@@ -72,6 +72,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp' " Completion
 
 Plug 'frankier/neovim-colors-solarized-truecolor-only'
+"Plug 'shaunsingh/solarized.nvim'
 
 " For vsnip users.
 "Plug 'hrsh7th/cmp-vsnip'
@@ -84,7 +85,7 @@ Plug 'Phaazon/hop.nvim' " Like sneak
 
 Plug 'tversteeg/registers.nvim' " Display registers
 
-"Plug 'kyazdani42/nvim-tree.lua' " Fast replacement for nerdtree
+Plug 'kyazdani42/nvim-tree.lua' " Fast replacement for nerdtree
 Plug 'preservim/nerdtree'
 
 " Plug 'blackCauldron7/surround.nvim' " Not ready for prime time
