@@ -153,8 +153,9 @@ set_title () {
 }
 
 # For WSL
-if grep -qi Microsoft /proc/version; then
+if false && grep -qi Microsoft /proc/version; then
   export DISPLAY=$(ip route list default | awk '{print $3}'):0
-  export LIBG_ALWAYS_INDIRECT=1
+  export LIBG_ALWAYS_INDIRECT=0
 fi
 
+export TERM="xterm-256color"
