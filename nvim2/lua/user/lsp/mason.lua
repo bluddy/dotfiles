@@ -1,5 +1,5 @@
 local servers = {
-  "ocamllsp",
+  -- "ocamllsp",
 	"pyright",
 	"bashls",
 	"jsonls",
