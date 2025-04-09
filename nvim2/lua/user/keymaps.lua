@@ -88,3 +88,5 @@ keymap("n", "<leader>zz", ":e ~/.config/nvim/init.lua")
 
 vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
+
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })

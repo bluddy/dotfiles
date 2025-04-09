@@ -117,6 +117,15 @@ return packer.startup(function(use)
   }
   -- OCaml
   require'lspconfig'.ocamllsp.setup{}
+
+  -- Oil
+  use({
+      "stevearc/oil.nvim",
+      config = function()
+        require("oil").setup()
+      end,
+    })
+
   use { "vimwiki/vimwiki" }
 
   -- Automatically set up your configuration after cloning packer.nvim
