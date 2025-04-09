@@ -50,7 +50,7 @@ return packer.startup(function(use)
   use { "numToStr/Comment.nvim"}
   use { "JoosepAlviste/nvim-ts-context-commentstring", commit = "32d9627123321db65a4f158b72b757bcaef1a3f4" }
   use { "kyazdani42/nvim-web-devicons", commit = "563f3635c2d8a7be7933b9e547f7c178ba0d4352" }
-  use { "kyazdani42/nvim-tree.lua"}
+  -- use { "kyazdani42/nvim-tree.lua"}
   use { "akinsho/bufferline.nvim"}
   use { "moll/vim-bbye"}
   use { "nvim-lualine/lualine.nvim"}
@@ -84,8 +84,8 @@ return packer.startup(function(use)
   use { "neovim/nvim-lspconfig"} -- enable LSP
   use { "williamboman/mason.nvim" }
   use { "williamboman/mason-lspconfig.nvim" }
-  use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
-  use { "RRethy/vim-illuminate", commit = "a2e8476af3f3e993bb0d6477438aad3096512e42" }
+  -- use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
+  -- use { "RRethy/vim-illuminate", commit = "a2e8476af3f3e993bb0d6477438aad3096512e42" }
 
   -- Telescope
   use { "nvim-telescope/telescope.nvim"}
