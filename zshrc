@@ -129,6 +129,8 @@ export WINHOME="$WIN/Users/yotam"
 
 [[ -d $HOME/npm/bin ]] && export PATH="$HOME/npm/bin:$PATH"
 
+[[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
+
 # Add usr/bin to path
 export PATH="$HOME/usr/local/bin:$HOME/usr/bin:$PATH"
 
