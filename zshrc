@@ -160,7 +160,7 @@ if false && grep -qi Microsoft /proc/version; then
   export LIBG_ALWAYS_INDIRECT=0
 fi
 
-export TERM="xterm-256color"
+export TERM="tmux-256color"
 
 # Temporary hack to fix x11
 #[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
