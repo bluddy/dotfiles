@@ -288,7 +288,7 @@ endif
 let g:startify_bookmarks = ['~/.config/nvim/init.vim', '~/.zshrc']
 
 " Make vimwiki use Google Drive
-let g:vimwiki_list = [{'path': '~/gdrive/wiki/vimwiki/'}]
+let g:vimwiki_list = [{'path': '~/mnt/gdrive/wiki/vimwiki/'}]
 
 " NERDTree
 let NERDTreeIgnore=[ '\.cmo$[[file]]', '\.o$[[file]]', '\.cmi$[[file]]'
