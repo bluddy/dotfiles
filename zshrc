@@ -69,8 +69,6 @@ zle -N substring-down-local
 bindkey -M vicmd 'k' substring-up-local
 bindkey -M vicmd 'j' substring-down-local
 
-[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
-
 # Add ocaml stuff to the path, and other ocaml constants
 if command_exists opam ; then
   . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -146,7 +144,7 @@ fi
 # disable context-switch chars
 printf "\e[?1004l"
 
-[[ -d $HOME/.fzf ]] && source <(fzf --zsh)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # export FZF_DEFAULT_COMMAND='ag -g ""'
 
@@ -169,10 +167,4 @@ export TERM="tmux-256color"
 # Temporary hack to fix x11
 #[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
 
-# Aliases for git
-alias gpl=git pull
-alias gps=git push
-alias gsw=git switch
-alias gs=git status
-alias gl=git log
 
