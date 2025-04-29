@@ -145,8 +145,9 @@ fi
 # disable context-switch chars
 printf "\e[?1004l"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='ag -g ""'
+[[ -d $HOME/.fzf ]] && source <(fzf --zsh)
+
+# export FZF_DEFAULT_COMMAND='ag -g ""'
 
 # For AMD CPU
 #export MKL_DEBUG_CPU_TYPE=5
@@ -167,5 +168,11 @@ export TERM="tmux-256color"
 # Temporary hack to fix x11
 #[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
 
+# Aliases for git
+alias gp=git pull
+alias gsw=git switch
+alias gs=git status
+alias gl=git log
 
 source ~/env_vars.sh
+
