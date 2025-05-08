@@ -22,3 +22,14 @@ if vim.fn.has("wsl") == 1 then
         }
     end
 end
+
+-- Handle vimwiki overriding '-' for Oil
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "vimwiki",
+  callback = function()
+    vim.keymap.set("n", "-", function()
+      require("oil").open()
+    end, { buffer = true, desc = "Open parent directory with oil.nvim" })
+  end,
+})
+
