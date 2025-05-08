@@ -129,10 +129,10 @@ export WINHOME="$WIN/Users/yotam"
 
 [[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
+[[ -d /opt/bin ]] && export PATH=/opt/bin:$PATH
+
 # Add usr/bin to path
-export PATH="$HOME/usr/local/bin:$HOME/usr/bin:/opt/nvim:/opt/mendeley:$PATH"
-alias nvim=nvim-linux-x86_64.appimage
-alias mendeley=mendeley-reference-manager-2.131.0-x86_64.AppImage
+export PATH="$HOME/usr/local/bin:$HOME/usr/bin:$PATH"
 
 # google cloud
 if [[ -d $HOME/google-cloud-sdk ]]; then
