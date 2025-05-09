@@ -1,3 +1,4 @@
+
 command_exists () {
     type "$1" &> /dev/null ;
 }
@@ -68,8 +69,6 @@ zle -N substring-down-local
 bindkey -M vicmd 'k' substring-up-local
 bindkey -M vicmd 'j' substring-down-local
 
-[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
-
 # Add ocaml stuff to the path, and other ocaml constants
 if command_exists opam ; then
   . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -132,7 +131,9 @@ export WINHOME="$WIN/Users/yotam"
 [[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # Add usr/bin to path
-export PATH="$HOME/usr/local/bin:$HOME/usr/bin:$PATH"
+export PATH="$HOME/usr/local/bin:$HOME/usr/bin:/opt/nvim:/opt/mendeley:$PATH"
+alias nvim=nvim-linux-x86_64.appimage
+alias mendeley=mendeley-reference-manager-2.131.0-x86_64.AppImage
 
 # google cloud
 if [[ -d $HOME/google-cloud-sdk ]]; then
@@ -144,7 +145,8 @@ fi
 printf "\e[?1004l"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='ag -g ""'
+
+# export FZF_DEFAULT_COMMAND='ag -g ""'
 
 # For AMD CPU
 #export MKL_DEBUG_CPU_TYPE=5
@@ -164,4 +166,5 @@ export TERM="tmux-256color"
 
 # Temporary hack to fix x11
 #[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
+
 
