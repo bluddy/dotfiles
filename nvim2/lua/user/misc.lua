@@ -1,4 +1,4 @@
-vim.g["vimwiki_list"] = {{path='~/gdrive/wiki/vimwiki/'}}
+vim.g["vimwiki_list"] = {{path='~/wiki/'}}
   
 if vim.fn.has("wsl") == 1 then
     if vim.fn.executable("wl-copy") == 0 then
