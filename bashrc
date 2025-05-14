@@ -84,3 +84,6 @@ alias v='f -e vim' # quickly open file with vim
 alias e='f -e emacs' # quickly open file with emacs
 _fasd_bash_hook_cmd_complete v e
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+alias fixwway='sudo mkdir -p /run/user/1000/ && sudo ln -s /mnt/wslg/runtime-dir/wayland-0* /run/user/1000/'
+
