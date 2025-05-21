@@ -87,3 +87,6 @@ _fasd_bash_hook_cmd_complete v e
 
 alias fixwway='sudo mkdir -p /run/user/1000/ && sudo ln -s /mnt/wslg/runtime-dir/wayland-0* /run/user/1000/'
 
+BREW=/home/linuxbrew/.linuxbrew/bin/brew
+[[ -f $BREW ]] && eval $($BREW shellenv)
+

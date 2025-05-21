@@ -164,8 +164,8 @@ fi
 
 export TERM="tmux-256color"
 
-# Temporary hack to fix x11
-#[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
-
 alias fixwway='sudo mkdir -p /run/user/1000/ && sudo ln -s /mnt/wslg/runtime-dir/wayland-0* /run/user/1000/'
+
+BREW=/home/linuxbrew/.linuxbrew/bin/brew
+[[ -f $BREW ]] && eval $($BREW shellenv)
 
