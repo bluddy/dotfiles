@@ -77,6 +77,7 @@ fi
 alias ll="ls -l"
 alias ..="cd .."
 alias latexmk='latexmk -pdf -pvc'
+alias lg=lazygit
 
 # local opam switch (per terminal window)
 function opamsw() {
@@ -163,9 +164,8 @@ fi
 
 export TERM="tmux-256color"
 
-# Temporary hack to fix x11
-#[ -L /tmp/.X11-unix ] || ( printf 'Replacing /tmp/.X11-unix with symlink\n' && sudo rm -r /tmp/.X11-unix/ && sudo ln -s /mnt/wslg/.X11-unix /tmp )
+BREW=/home/linuxbrew/.linuxbrew/bin/brew
+[[ -f $BREW ]] && eval "$($BREW shellenv)"
 
 source /opt/imagry/env_vars.sh
-
 
