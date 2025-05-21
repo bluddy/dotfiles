@@ -167,5 +167,8 @@ export TERM="tmux-256color"
 BREW=/home/linuxbrew/.linuxbrew/bin/brew
 [[ -f $BREW ]] && eval "$($BREW shellenv)"
 
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 source /opt/imagry/env_vars.sh
 
