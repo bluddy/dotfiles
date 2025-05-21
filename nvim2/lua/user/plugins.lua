@@ -48,8 +48,8 @@ return packer.startup(function(use)
   use { "nvim-lua/plenary.nvim"} -- Useful lua functions used by lots of plugins
   use { "windwp/nvim-autopairs"} -- Autopairs, integrates with both cmp and treesitter
   use { "numToStr/Comment.nvim"}
-  use { "JoosepAlviste/nvim-ts-context-commentstring", commit = "32d9627123321db65a4f158b72b757bcaef1a3f4" }
-  use { "kyazdani42/nvim-web-devicons", commit = "563f3635c2d8a7be7933b9e547f7c178ba0d4352" }
+  use { "JoosepAlviste/nvim-ts-context-commentstring" }
+  use { "kyazdani42/nvim-web-devicons" }
   -- use { "kyazdani42/nvim-tree.lua"}
   use { "akinsho/bufferline.nvim"}
   use { "moll/vim-bbye"}
@@ -80,12 +80,10 @@ return packer.startup(function(use)
   use { "rafamadriz/friendly-snippets"} -- a bunch of snippets to use
 
   -- LSP
-  -- use { "williamboman/nvim-lsp-installer", commit = "e9f13d7acaa60aff91c58b923002228668c8c9e6" } -- simple to use language server installer
   use { "neovim/nvim-lspconfig"} -- enable LSP
-  use { "williamboman/mason.nvim" }
-  use { "williamboman/mason-lspconfig.nvim" }
-  -- use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
-  -- use { "RRethy/vim-illuminate", commit = "a2e8476af3f3e993bb0d6477438aad3096512e42" }
+  use { "mason-org/mason.nvim" }
+  use { "mason-org/mason-lspconfig.nvim" }
+  use { "RRethy/vim-illuminate" }
 
   -- Telescope
   use { "nvim-telescope/telescope.nvim"}
@@ -99,9 +97,9 @@ return packer.startup(function(use)
   use { "jreybert/vimagit" }
 
   -- DA
-  use { "mfussenegger/nvim-dap", commit = "6b12294a57001d994022df8acbe2ef7327d30587" }
-  use { "rcarriga/nvim-dap-ui", commit = "1cd4764221c91686dcf4d6b62d7a7b2d112e0b13" }
-  use { "ravenxrz/DAPInstall.nvim", commit = "8798b4c36d33723e7bba6ed6e2c202f84bb300de" }
+  use { "mfussenegger/nvim-dap" }
+  use { "rcarriga/nvim-dap-ui" }
+  use { "ravenxrz/DAPInstall.nvim" }
   -- Lua
   use {
     "folke/which-key.nvim",
