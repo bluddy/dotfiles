@@ -115,8 +115,6 @@ return packer.startup(function(use)
      }
     end
   }
-  -- OCaml
-  require'lspconfig'.ocamllsp.setup{}
 
   -- Oil
   use({
