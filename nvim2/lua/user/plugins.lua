@@ -138,6 +138,15 @@ return packer.startup(function(use)
     },
     })
 
+  use ({ "ggandor/leap.nvim",
+    requires = {
+      "tpope/vim-repeat"
+    },
+    config = function()
+      require('leap').set_default_mappings()
+    end,
+  })
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then
