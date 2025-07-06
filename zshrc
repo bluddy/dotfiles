@@ -168,5 +168,5 @@ BREW=/home/linuxbrew/.linuxbrew/bin/brew
 [[ -f $BREW ]] && eval $($BREW shellenv)
 
 # Install carapace with homebrew
-if command_exists carapace && source <(carapace _carapace zsh)
+command_exists carapace && source <(carapace _carapace zsh)
 
