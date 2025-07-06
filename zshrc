@@ -173,5 +173,5 @@ export LC_ALL=en_US.UTF-8
 source /opt/imagry/env_vars.sh
 
 # Install carapace with homebrew
-if command_exists carapace && source <(carapace _carapace zsh)
+command_exists carapace && source <(carapace _carapace zsh)
 
