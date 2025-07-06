@@ -167,3 +167,6 @@ alias fixwway='sudo mkdir -p /run/user/1000/ && sudo ln -s /mnt/wslg/runtime-dir
 BREW=/home/linuxbrew/.linuxbrew/bin/brew
 [[ -f $BREW ]] && eval $($BREW shellenv)
 
+# Install carapace with homebrew
+if command_exists carapace && source <(carapace _carapace zsh)
+
