@@ -1,8 +1,13 @@
 return {
-  "ishan9299/nvim-solarized-lua",
-  priority = 1000,
+  "maxmx03/solarized.nvim",
   lazy = false,
-  config = function()
-    require "user.plugin_config.colorscheme"
+  priority = 1000,
+  ---@type solarized.config
+  opts = {},
+  config = function(_, opts)
+    vim.o.termguicolors = true
+    vim.o.background = "light"
+    require("solarized").setup(opts)
+    vim.cmd.colorscheme "solarized"
   end,
 }
