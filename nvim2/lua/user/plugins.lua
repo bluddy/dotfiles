@@ -17,6 +17,31 @@ require("lazy").setup({
   -- Core dependencies
   { "nvim-lua/plenary.nvim" }, -- Useful lua functions used by lots of plugins
 
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      dashboard = { enabled = true },
+      explorer = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      picker = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      scroll = { enabled = true },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+    },
+  },
+  
+
   -- Autopairs
   { 
     "windwp/nvim-autopairs",
@@ -85,13 +110,13 @@ require("lazy").setup({
   },
 
   -- Dashboard
-  { 
-    "goolord/alpha-nvim",
-    event = "VimEnter",
-    config = function()
-      require("user.plugin_config.alpha")
-    end,
-  },
+  -- { 
+  --   "goolord/alpha-nvim",
+  --   event = "VimEnter",
+  --   config = function()
+  --     require("user.plugin_config.alpha")
+  --   end,
+  -- },
 
   -- Surround
   { 
@@ -229,14 +254,32 @@ require("lazy").setup({
   },
 
   -- VimWiki
-  { 
-    "vimwiki/vimwiki",
-    event = "VeryLazy",
-    init = function()
-      -- This runs before the plugin is loaded
-      vim.g.vimwiki_list = {{path='~/wiki/'}}
+  -- { 
+  --   "vimwiki/vimwiki",
+  --   event = "VeryLazy",
+  --   init = function()
+  --     -- This runs before the plugin is loaded
+  --     vim.g.vimwiki_list = {
+  --       {
+  --         path='~/wiki/',
+  --         syntax='markdown',
+  --         ext='.md'
+  --       }
+  --     }
+  --   end,
+  -- },
+  --
+  {
+    "jakewvincent/mkdnflow.nvim",
+    config = function()
+      require("mkdnflow").setup({
+        dirs = { "~/wiki" },
+
+      })
     end,
+    ft = "markdown",
   },
+
 
   -- Git tools
   { 
@@ -254,7 +297,7 @@ require("lazy").setup({
     },
     config = true
   },
-}, {
+
   -- Lazy.nvim configuration options
   ui = {
     border = "rounded",
