@@ -90,3 +90,9 @@ vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- Wiki
+vim.keymap.set("n", "<leader>ww", function()
+  require("telescope.builtin").find_files({ cwd = "~/wiki" })
+end, { desc = "Open wiki (mkdnflow)" })
+
