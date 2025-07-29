@@ -1,0 +1,1 @@
+return { "jreybert/vimagit", cmd = "Magit" }
