@@ -176,3 +176,6 @@ source /opt/imagry/env_vars.sh
 # Install carapace with homebrew
 command_exists carapace && source <(carapace _carapace zsh)
 
+autoload bashcompinit
+bashcompinit
+source "/home/imagry/.local/share/bash-completion/completions/am"
