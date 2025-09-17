@@ -9,4 +9,4 @@ ln -s dotfiles/agignore .agignore
 ln -s dotfiles/ocamlinit .ocamlinit
 ln -s dotfiles/tmux_linux.conf .tmux.conf
 ln -s dotfiles/zshrc .zshrc
-ln -s dotfiles/nvim $HOME/.config/nvim
+ln -s dotfiles/nvim2 $HOME/.config/nvim
