@@ -170,3 +170,12 @@ BREW=/home/linuxbrew/.linuxbrew/bin/brew
 # Install carapace with homebrew
 command_exists carapace && source <(carapace _carapace zsh)
 
+# Check for and start ssh-agent
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    # Start the agent and set environment variables
+    eval "$(ssh-agent -s)"
+
+    # Optional: Automatically add your default key (you will still be prompted for the passphrase)
+    ssh-add ~/.ssh/id_rsa 2>/dev/null
+    ssh-add ~/.ssh/id_ed25519_github_work 2>/dev/null
+fi
