@@ -179,3 +179,9 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     ssh-add ~/.ssh/id_rsa 2>/dev/null
     ssh-add ~/.ssh/id_ed25519_github_work 2>/dev/null
 fi
+
+SECRETS_FILE=$HOME/secrets.sh
+if [[ -f $SECRETS_FILE ]]; then
+  source $SECRETS_FILE
+fi
+
