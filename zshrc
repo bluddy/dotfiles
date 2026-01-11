@@ -179,3 +179,9 @@ command_exists carapace && source <(carapace _carapace zsh)
 autoload bashcompinit
 bashcompinit
 source "/home/imagry/.local/share/bash-completion/completions/am"
+
+SECRETS_FILE=$HOME/secrets.sh
+if [[ -f $SECRETS_FILE ]]; then
+  source $SECRETS_FILE
+fi
+
