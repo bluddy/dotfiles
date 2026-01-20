@@ -185,3 +185,6 @@ if [[ -f $SECRETS_FILE ]]; then
   source $SECRETS_FILE
 fi
 
+# Add autocomplete for python calling
+compdef '_files' python
+
