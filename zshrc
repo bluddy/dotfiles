@@ -69,12 +69,6 @@ zle -N substring-down-local
 bindkey -M vicmd 'k' substring-up-local
 bindkey -M vicmd 'j' substring-down-local
 
-# Add ocaml stuff to the path, and other ocaml constants
-if command_exists opam ; then
-  . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-  eval `opam config env`
-fi
-
 alias ll="ls -l"
 alias ..="cd .."
 alias latexmk='latexmk -pdf -pvc'
@@ -163,6 +157,7 @@ fi
 export TERM="tmux-256color"
 
 alias fixwway='sudo mkdir -p /run/user/1000/ && sudo ln -s /mnt/wslg/runtime-dir/wayland-0* /run/user/1000/'
+alias lg=lazygit
 
 BREW=/home/linuxbrew/.linuxbrew/bin/brew
 [[ -f $BREW ]] && eval $($BREW shellenv)
@@ -179,3 +174,17 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     ssh-add ~/.ssh/id_rsa 2>/dev/null
     ssh-add ~/.ssh/id_ed25519_github_work 2>/dev/null
 fi
+
+command_exists () {
+    type "$1" &> /dev/null ;
+}
+
+# Android NDK
+export NKD_PATH=$HOME/android-ndk-r27d
+
+# Add ocaml stuff to the path, and other ocaml constants
+if command_exists opam ; then
+  . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+  eval `opam config env`
+fi
+
