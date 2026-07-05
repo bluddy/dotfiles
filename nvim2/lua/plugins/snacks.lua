@@ -9,7 +9,7 @@ return {
     -- refer to the configuration section below
     bigfile = { enabled = true },
     dashboard = { enabled = true },
-    explorer = { enabled = true },
+    explorer = { enabled = true, watch = false },
     indent = { enabled = true },
     input = { enabled = true },
     picker = { enabled = true },
@@ -17,7 +17,7 @@ return {
     quickfile = { enabled = true },
     scope = { enabled = true },
     scroll = { enabled = false },
-    statuscolumn = { enabled = true },
+    statuscolumn = { enabled = true, refresh = 200 },
     words = { enabled = true },
   },
   keys = {
