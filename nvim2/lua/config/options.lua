@@ -42,3 +42,16 @@ vim.opt.iskeyword:append "-" -- treats words with `-` as single words
 vim.opt.formatoptions:remove { "c", "r", "o" } -- This is a sequence of letters which describes how automatic formatting is to be done
 vim.opt.linebreak = true
 vim.opt.spell = false
+
+-- Use PowerShell for :terminal (and toggleterm) on Windows.
+-- These shell* settings are required so :terminal, :! and system() work with pwsh/powershell.
+if vim.fn.has("win32") == 1 then
+  local powershell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell"
+  vim.opt.shell = powershell
+  vim.opt.shellcmdflag =
+    "-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+  vim.opt.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
+  vim.opt.shellpipe = '2>&1 | %%{ "$_" } | Tee-Object %s; exit $LastExitCode'
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
+end
