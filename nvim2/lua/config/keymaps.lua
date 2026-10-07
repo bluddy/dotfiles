@@ -50,8 +50,8 @@ keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
 -- Terminal --
--- Leave terminal-insert mode back to normal mode.
-keymap("t", "<Esc>", [[<C-\><C-n>]], opts)
+-- Leave terminal-insert mode back to normal mode with Esc-Esc (preserves single Esc for CLI tools/agents).
+keymap("t", "<Esc><Esc>", [[<C-\><C-n>]], vim.tbl_extend("force", opts, { desc = "Exit terminal mode" }))
 -- Jump straight from a terminal to adjacent windows (mirrors normal-mode C-hjkl).
 keymap("t", "<C-h>", [[<C-\><C-n><C-w>h]], opts)
 keymap("t", "<C-j>", [[<C-\><C-n><C-w>j]], opts)

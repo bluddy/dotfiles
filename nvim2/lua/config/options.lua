@@ -55,3 +55,6 @@ if vim.fn.has("win32") == 1 then
   vim.opt.shellquote = ""
   vim.opt.shellxquote = ""
 end
+
+-- Save terminal buffers and splits in sessions
+vim.opt.sessionoptions:append("terminal")

@@ -41,7 +41,7 @@ return {
     -- so <Esc> and <C-hjkl> behave like they do in a normal :terminal.
     local function set_terminal_keymaps()
       local map_opts = { buffer = 0, silent = true }
-      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], map_opts)
+      vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], map_opts)
       vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], map_opts)
       vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], map_opts)
       vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], map_opts)
